@@ -62,7 +62,12 @@
 
   details h2 {
     font-size: 16px;
-    /* font-weight: bold; */
+  }
+
+  p.note {
+    font-size: 12px;
+    color: #aaa;
+    text-align: center;
   }
 
   p {
@@ -120,6 +125,7 @@
     0️⃣&ensp;Zero-goal Match Checker&ensp;🧐
   </h1>
   <main>
+    <p class="note">Note that only Group Stage matches can end 0–0.</p>
     <?php
     // Save the JSON response to a local file periodically so that we don't
     // overload the API server.
@@ -186,11 +192,13 @@
         else if ( $match->status === 'future_scheduled' ) {
           $output .= '<span class="status upcoming">UPCOMING!</span>';
         }
-        else if ( $match->home_team->goals === 0 && $match->away_team->goals === 0 ) {
-          $output .= '<span class="status zero-goal-match">0-0! 😕</span>';
-        }
-        else {
-          $output .= '<span class="status not-zero-goal-match">NOT 0-0! ⚽️</span>';
+        else if ( $match->stage_name === 'First stage' ) {
+          else if ( $match->home_team->goals === 0 && $match->away_team->goals === 0 ) {
+            $output .= '<span class="status zero-goal-match">0-0! 😕</span>';
+          }
+          else {
+            $output .= '<span class="status not-zero-goal-match">NOT 0-0! ⚽️</span>';
+          }
         }
 
         $output .= '</p>';
