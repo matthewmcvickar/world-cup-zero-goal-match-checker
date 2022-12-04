@@ -18,6 +18,14 @@
   }
 
   h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 1.25rem;
+    margin-bottom: -.25rem;
+    text-transform: uppercase;
+  }
+
+  h3 {
     font-size: 18px;
     margin-top: 1.25rem;
     margin-bottom: -.25rem;
@@ -152,11 +160,17 @@
           $output .= '</details>';
         }
 
+        // Figure out if we need to show a new stage heading.
+        if ( ! isset( $stage ) || $stage !== $match->stage_name ) {
+          $stage = $match->stage_name;
+          $output .= '<h2>' . $stage .  '</h2>';
+        }
+
         // Figure out if we need to show a new day heading.
         if ( ! isset( $day )
           || ( isset( $day ) && date( 'd', $date ) !== $day ) ) {
           $day = date( 'd', $date );
-          $output .= '<h2>' . date( 'l, F d, Y', $date ) .  '</h2>';
+          $output .= '<h3>' . date( 'l, F d, Y', $date ) .  '</h3>';
         }
 
         // Show match info.
