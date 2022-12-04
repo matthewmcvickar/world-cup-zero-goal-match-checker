@@ -110,6 +110,7 @@
     color: darkred;
   }
 
+  .completed-match,
   .not-zero-goal-match {
     color: darkgreen;
   }
@@ -199,6 +200,9 @@
           else {
             $output .= '<span class="status not-zero-goal-match">NOT 0-0! ⚽️</span>';
           }
+        }
+        else if ( $match->status === 'completed' ) {
+          $output .= '<span class="status completed-match">COMPLETED! ⚽️</span>';
         }
 
         $output .= '</p>';
