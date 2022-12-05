@@ -20,7 +20,7 @@
   h2 {
     font-size: 20px;
     font-weight: bold;
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
     margin-bottom: -.25rem;
     text-transform: uppercase;
   }
@@ -61,6 +61,10 @@
   }
 
   details h2 {
+    font-size: 18px;
+  }
+
+  details h3 {
     font-size: 16px;
   }
 
@@ -76,8 +80,8 @@
   }
 
   main p {
-    margin-left: 50px;
-    text-indent: -50px;
+    margin-left: 75px;
+    text-indent: -75px;
   }
 
   main p span {
@@ -86,7 +90,7 @@
   }
 
   .time {
-    width: 50px;
+    width: 75px;
   }
 
   .matchup {
@@ -126,7 +130,7 @@
     0️⃣&ensp;Zero-goal Match Checker&ensp;🧐
   </h1>
   <main>
-    <p class="note">Note that only Group Stage matches can end 0–0.</p>
+    <p class="note">Note that only Group Stage matches can end 0&ndash;0.</p>
     <?php
     // Save the JSON response to a local file periodically so that we don't
     // overload the API server.
@@ -165,6 +169,7 @@
         if ( $past_matches_section_open && date( 'Ymd', $date ) >= date( 'Ymd' ) ) {
           $past_matches_section_open = false;
           $output .= '</details>';
+          $output .= '<h2>' . $stage .  '</h2>';
         }
 
         // Figure out if we need to show a new stage heading.
@@ -183,7 +188,7 @@
         // Show match info.
         $output .= '
           <p>
-            <span class="time">' . date( 'ha', $date ) . '</span><!--
+            <span class="time">' . date( 'ha', $date ) . ' PT</span><!--
             --><span class="matchup">' . $match->home_team->name . ' v. ' . $match->away_team->name . '</span>
         ';
 
@@ -194,7 +199,7 @@
           $output .= '<span class="status upcoming">UPCOMING!</span>';
         }
         else if ( $match->stage_name === 'First stage' ) {
-          else if ( $match->home_team->goals === 0 && $match->away_team->goals === 0 ) {
+          if ( $match->home_team->goals === 0 && $match->away_team->goals === 0 ) {
             $output .= '<span class="status zero-goal-match">0-0! 😕</span>';
           }
           else {
