@@ -79,23 +79,39 @@
     margin: 1rem 0;
   }
 
-  main p {
-    margin-left: 75px;
-    text-indent: -75px;
-  }
-
-  main p span {
-    display: inline-block;
-    text-indent: 0;
+  .matches p {
+    display: flex;
   }
 
   .time {
     width: 75px;
+    min-width: 75px;
+  }
+
+  .matchup-and-status {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  .matchup,
+  .reveal-button {
+    margin-right: 6px;
   }
 
   .matchup {
     font-weight: 600;
-    margin-right: 6px;
+  }
+
+  button.reveal-button {
+    -webkit-appearance: none;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    background-color: #eee;
+    color: #333;
+    font-weight: bold;
+    padding: 2px 5px;
+    text-transform: uppercase;
   }
 
   .status {
@@ -130,99 +146,133 @@
     0️⃣&ensp;Zero-goal Match Checker&ensp;🧐
   </h1>
   <main>
-    <p class="note">Note that only Group Stage matches can end 0&ndash;0.</p>
-    <?php
-    // Save the JSON response to a local file periodically so that we don't
-    // overload the API server.
-    if ( file_exists( 'matches.json' ) && filemtime( 'matches.json' ) > strtotime( '5 minutes ago' ) ) {
-      $matches_json = file_get_contents( 'matches.json' );
-    }
-    else {
-      if ( $matches_json = file_get_contents( 'https://worldcupjson.net/matches/' ) ) {
-        file_put_contents( 'matches.json', $matches_json );
-      }
-      else {
+    <div class="matches">
+      <?php
+      // Save the JSON response to a local file periodically so that we don't
+      // overload the API server.
+      if ( file_exists( 'matches.json' ) && filemtime( 'matches.json' ) > strtotime( '5 minutes ago' ) ) {
         $matches_json = file_get_contents( 'matches.json' );
       }
-    }
-
-    $matches = json_decode( $matches_json );
-    $output = '';
-
-    if ( empty( $matches ) ) {
-      echo '<p>Something&rsquo;s wrong&mdash;could not get matches data! 😩</p>';
-    } else {
-      $output .= '<details><summary>Past Matches</summary>';
-      $past_matches_section_open = true;
-
-      // Loop through all matches.
-      foreach( $matches as $match ) {
-        $date = strtotime( $match->datetime );
-
-        // If this match happens today or in the future, then close the 'Past
-        // Matches' section.
-        if ( $past_matches_section_open && date( 'Ymd', $date ) >= date( 'Ymd' ) ) {
-          $past_matches_section_open = false;
-          $output .= '</details>';
-          $output .= '<h2>' . $stage .  '</h2>';
+      else {
+        if ( $matches_json = file_get_contents( 'https://worldcupjson.net/matches/' ) ) {
+          file_put_contents( 'matches.json', $matches_json );
         }
-
-        // Figure out if we need to show a new stage heading.
-        if ( ! isset( $stage ) || $stage !== $match->stage_name ) {
-          $stage = $match->stage_name;
-          $output .= '<h2>' . $stage .  '</h2>';
+        else {
+          $matches_json = file_get_contents( 'matches.json' );
         }
-
-        // Figure out if we need to show a new day heading.
-        if ( ! isset( $day )
-          || ( isset( $day ) && date( 'd', $date ) !== $day ) ) {
-          $day = date( 'd', $date );
-          $output .= '<h3>' . date( 'l, F d, Y', $date ) .  '</h3>';
-        }
-
-        // Show match info.
-        if ( $match->home_team->name === 'To Be Determined' ) {
-          $match->home_team->name = '?';
-        }
-
-        if ( $match->away_team->name === 'To Be Determined' ) {
-          $match->away_team->name = '?';
-        }
-
-        $output .= '
-          <p>
-            <span class="time">' . date( 'ha', $date ) . ' PT</span><!--
-            --><span class="matchup">' . $match->home_team->name . ' v. ' . $match->away_team->name . '</span>
-        ';
-
-        if ( $match->status === 'in_progress' ) {
-          $output .= '<span class="status in-progress">IN PROGRESS!</span>';
-        }
-        else if ( $match->status === 'future_scheduled' ) {
-          $output .= '<span class="status upcoming">UPCOMING!</span>';
-        }
-        else if ( $match->stage_name === 'First stage' ) {
-          if ( $match->home_team->goals === 0 && $match->away_team->goals === 0 ) {
-            $output .= '<span class="status zero-goal-match">0-0! 😕</span>';
-          }
-          else {
-            $output .= '<span class="status not-zero-goal-match">NOT 0-0! ⚽️</span>';
-          }
-        }
-        else if ( $match->status === 'completed' ) {
-          $output .= '<span class="status completed-match">COMPLETED! ⚽️</span>';
-        }
-
-        $output .= '</p>';
       }
 
-      echo $output;
-    }
-    ?>
+      $matches = json_decode( $matches_json );
+      $output = '';
+
+      if ( empty( $matches ) ) {
+        echo '<p>Something&rsquo;s wrong&mdash;could not get matches data! 😩</p>';
+      } else {
+        $output .= '<details><summary>Past Matches</summary>';
+        $past_matches_section_open = true;
+
+        // Loop through all matches.
+        foreach( $matches as $match ) {
+          $date = strtotime( $match->datetime );
+
+          // Don't show unscheduled matches.
+          // if ( $match->status === 'future_unscheduled' ) {
+          //   continue;
+          // }
+
+          // If this match happens today or in the future, then close the 'Past
+          // Matches' section.
+          if ( $past_matches_section_open && date( 'Ymd', $date ) >= date( 'Ymd' ) ) {
+            $past_matches_section_open = false;
+            $output .= '</details>';
+            $output .= '<h2>' . $stage .  '</h2>';
+          }
+
+          // Figure out if we need to show a new stage heading.
+          if ( ! isset( $stage ) || $stage !== $match->stage_name ) {
+            $stage = $match->stage_name;
+            $output .= '<h2>' . $stage .  '</h2>';
+          }
+
+          // Figure out if we need to show a new day heading.
+          if ( ! isset( $day )
+            || ( isset( $day ) && date( 'd', $date ) !== $day ) ) {
+            $day = date( 'd', $date );
+            $output .= '<h3>' . date( 'l, F d, Y', $date ) .  '</h3>';
+          }
+
+          // Show match info.
+          $show_teams = false;
+          $hidden_attr = 'hidden';
+          $home_team = $match->home_team->name;
+          $away_team = $match->away_team->name;
+
+          if ( $match->home_team->name === 'To Be Determined' ) {
+            $home_team = '?';
+          }
+
+          if ( $match->away_team->name === 'To Be Determined' ) {
+            $away_team = '?';
+          }
+
+          // Show team names if:
+          if (
+            // 1. it's the group stage
+            $match->stage_name === 'First stage'
+            // 2. OR neither team has been named yet
+            || ( $match->home_team->name === 'To Be Determined'
+              && $match->away_team->name === 'To Be Determined' )
+            // 3. OR the game happened before today
+            || ( date( 'Ymd', $date ) <= date( 'Ymd' ) )
+          ) {
+            $show_teams = true;
+            $hidden_attr = '';
+          }
+
+          $output .= '<p>
+            <span class="time">' . date( 'ha', $date ) . ' PT</span>
+            <span class="matchup-and-status">';
+
+          $output .= "<span class=\"matchup\" $hidden_attr>$home_team v. $away_team</span>";
+
+          if ( ! $show_teams ) {
+            $output .= '<button class="reveal-button">Reveal Matchup</button>';
+          }
+
+          if ( $match->status === 'in_progress' ) {
+            $output .= '<span class="status in-progress">IN PROGRESS!</span>';
+          }
+          else if ( $match->status === 'future_unscheduled' || $match->status === 'future_scheduled' ) {
+            $output .= '<span class="status upcoming">UPCOMING!</span>';
+          }
+          else if ( $match->stage_name === 'First stage' ) {
+            if ( $match->home_team->goals === 0 && $match->away_team->goals === 0 ) {
+              $output .= '<span class="status zero-goal-match">0-0! 😕</span>';
+            }
+            else {
+              $output .= '<span class="status not-zero-goal-match">NOT 0-0! ⚽️</span>';
+            }
+          }
+          else if ( $match->status === 'completed' ) {
+            $output .= '<span class="status completed-match">COMPLETED! ⚽️</span>';
+          }
+
+          $output .= '
+            </span>
+          </p>';
+        }
+
+        echo $output;
+      }
+      ?>
+    </div>
   </main>
   <footer>
     <details>
       <summary>About This Site</summary>
+      <h2>A Note About 0&ndash;0 Games</h2>
+      <p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
+      draw. After that, games must have a winner.</p>
       <h2>Who made this?</h2>
       <p>This was built by <a href="https://matthewmcvickar.com">Matthew McVickar</a>,
       a software engineer in Portland, OR, US.</p>
@@ -241,5 +291,13 @@
       highlight instead of a 90-minute match.</p>
     </details>
   </footer>
+  <script>
+  document.querySelectorAll('.reveal-button').forEach( (button) => {
+    button.addEventListener('click', (event) => {
+      event.target.hidden = true;
+      event.target.previousElementSibling.hidden = false;
+    } );
+  } );
+  </script>
 </body>
 </html>
