@@ -159,11 +159,6 @@
       foreach( $matches as $match ) {
         $date = strtotime( $match->datetime );
 
-        // Don't show unscheduled matches.
-        if ( $match->status === 'future_unscheduled' ) {
-          continue;
-        }
-
         // If this match happens today or in the future, then close the 'Past
         // Matches' section.
         if ( $past_matches_section_open && date( 'Ymd', $date ) >= date( 'Ymd' ) ) {
@@ -186,6 +181,14 @@
         }
 
         // Show match info.
+        if ( $match->home_team->name === 'To Be Determined' ) {
+          $match->home_team->name = '?';
+        }
+
+        if ( $match->away_team->name === 'To Be Determined' ) {
+          $match->away_team->name = '?';
+        }
+
         $output .= '
           <p>
             <span class="time">' . date( 'ha', $date ) . ' PT</span><!--
