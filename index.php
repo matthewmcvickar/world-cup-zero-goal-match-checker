@@ -113,10 +113,21 @@
     border-radius: 3px;
     background: linear-gradient(to bottom, #fff, #e8e8e8);
     color: #333;
+    cursor: pointer;
     font-weight: bold;
     line-height: 1;
     padding: 2px 5px;
     text-transform: uppercase;
+  }
+
+  @media (hover: hover) {
+    button.reveal-button {
+      opacity: 0.8;
+    }
+
+    button.reveal-button:hover {
+      opacity: 1;
+    }
   }
 
   .status {
