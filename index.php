@@ -68,6 +68,10 @@
     font-size: 16px;
   }
 
+  details + h2 {
+    margin-top: 1rem;
+  }
+
   p.note {
     font-size: 12px;
     color: #aaa;
@@ -107,9 +111,10 @@
     -webkit-appearance: none;
     border: 1px solid #aaa;
     border-radius: 3px;
-    background-color: #eee;
+    background: linear-gradient(to bottom, #fff, #e8e8e8);
     color: #333;
     font-weight: bold;
+    line-height: 1;
     padding: 2px 5px;
     text-transform: uppercase;
   }
@@ -170,6 +175,7 @@
       } else {
         $output .= '<details><summary>Past Matches</summary>';
         $past_matches_section_open = true;
+        $most_recent_completed_game_day = null;
 
         // Loop through all matches.
         foreach( $matches as $match ) {
@@ -179,6 +185,10 @@
           // if ( $match->status === 'future_unscheduled' ) {
           //   continue;
           // }
+
+          if ( $match->status === 'completed' ) {
+            $most_recent_completed_game_day = strtotime( $match->datetime );
+          }
 
           // If this match happens today or in the future, then close the 'Past
           // Matches' section.
@@ -219,11 +229,16 @@
           if (
             // 1. it's the group stage
             $match->stage_name === 'First stage'
+
             // 2. OR neither team has been named yet
             || ( $match->home_team->name === 'To Be Determined'
               && $match->away_team->name === 'To Be Determined' )
-            // 3. OR the game happened before today
-            || ( date( 'Ymd', $date ) <= date( 'Ymd' ) )
+
+              // 3. OR the game is completed
+            || ( $match->status === 'completed' )
+
+            // 4. OR the most recently completed game happened before today
+            || ( date( 'Ymd', $most_recent_completed_game_day ) < date( 'Ymd' ) )
           ) {
             $show_teams = true;
             $hidden_attr = '';
@@ -269,7 +284,11 @@
   </main>
   <footer>
     <details>
-      <summary>About This Site</summary>
+      <summary>FAQ &amp; About This Site</summary>
+      <h2>Why are some matchups hidden?</h2>
+      <p>To prevent spoilers, I hide the matchup of future games that would
+      reveal the result of a game happening today. (If the most recently
+      completed game happened before today, no matchups are hidden.)</p>
       <h2>A Note About 0&ndash;0 Games</h2>
       <p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
       draw. After that, games must have a winner.</p>
