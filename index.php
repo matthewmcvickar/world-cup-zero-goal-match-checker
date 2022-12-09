@@ -186,20 +186,11 @@
       } else {
         $output .= '<details><summary>Past Matches</summary>';
         $past_matches_section_open = true;
-        $most_recent_completed_game_day = null;
+        $in_future_and_new_stage = false;
 
         // Loop through all matches.
         foreach( $matches as $match ) {
           $date = strtotime( $match->datetime );
-
-          // Don't show unscheduled matches.
-          // if ( $match->status === 'future_unscheduled' ) {
-          //   continue;
-          // }
-
-          if ( $match->status === 'completed' ) {
-            $most_recent_completed_game_day = strtotime( $match->datetime );
-          }
 
           // If this match happens today or in the future, then close the 'Past
           // Matches' section.
@@ -210,6 +201,13 @@
             if ( $stage === $match->stage_name ) {
               $output .= '<h2>' . $stage .  '</h2>';
             }
+          }
+
+          // If we're in the future and it's a new stage, start hiding teams.
+          if ( ! $in_future_and_new_stage
+            && ( date( 'Ymd', $date ) > date( 'Ymd' ) && $stage !== $match->stage_name ) ) {
+              $output .= '<!-- Start hiding matchups! -->';
+              $in_future_and_new_stage = true;
           }
 
           // Figure out if we need to show a new stage heading.
@@ -241,18 +239,12 @@
 
           // Show team names if:
           if (
-            // 1. it's the group stage
-            $match->stage_name === 'First stage'
+            // 1. It's not time to hide fields.
+            ! $in_future_and_new_stage
 
             // 2. OR neither team has been named yet
             || ( $match->home_team->name === 'To Be Determined'
               && $match->away_team->name === 'To Be Determined' )
-
-              // 3. OR the game is completed
-            || ( $match->status === 'completed' )
-
-            // 4. OR the most recently completed game happened before today
-            || ( date( 'Ymd', $most_recent_completed_game_day ) < date( 'Ymd' ) )
           ) {
             $show_teams = true;
             $hidden_attr = '';
@@ -300,8 +292,8 @@
     <details>
       <summary>FAQ &amp; About This Site</summary>
       <h2>Why are some matchups hidden?</h2>
-      <p>To prevent spoilers, I hide the matchup of future games that would
-      reveal the result of a game happening today. (If the most recently
+      <p>To prevent spoilers, I hide the matchup of games in future stages that
+      would reveal the result of a game happening today. (If the most recently
       completed game happened before today, no matchups are hidden.)</p>
       <h2>A Note About 0&ndash;0 Games</h2>
       <p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
