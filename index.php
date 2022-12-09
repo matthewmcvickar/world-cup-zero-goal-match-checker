@@ -206,7 +206,10 @@
           if ( $past_matches_section_open && date( 'Ymd', $date ) >= date( 'Ymd' ) ) {
             $past_matches_section_open = false;
             $output .= '</details>';
-            $output .= '<h2>' . $stage .  '</h2>';
+
+            if ( $stage === $match->stage_name ) {
+              $output .= '<h2>' . $stage .  '</h2>';
+            }
           }
 
           // Figure out if we need to show a new stage heading.
