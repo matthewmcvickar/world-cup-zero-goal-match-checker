@@ -283,13 +283,16 @@
 					$team_1_name = $match->team1;
 					$team_2_name = $match->team2;
 
+					$team_1_determined = true;
+					$team_2_determined = true;
+
 					// If the team name contains a number, the team is to-be-determined.
 					if ( preg_match( '~[0-9]+~', $match->team1 ) ) {
-						$team_1_name = '?';
+						$team_1_determined = false;
 					}
 
 					if ( preg_match( '~[0-9]+~', $match->team2 ) ) {
-						$team_2_name = '?';
+						$team_2_determined = false;
 					}
 
 					// Fix team names.
@@ -332,7 +335,7 @@
 						! $in_future_and_new_round
 
 						// ...OR if both teams haven't been named yet.
-						|| ( $team_1_name === '?' && $team_2_name === '?' )
+						|| ( ! $team_1_determined && ! $team_2_determined )
 					) {
 						$show_teams = true;
 						$hidden_attr = '';
