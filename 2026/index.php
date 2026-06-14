@@ -404,12 +404,11 @@
 			loads, as long as it has been at least five minutes since the last time
 			it was fetched.</p>
 			<h2>Why do this?</h2>
-			<p>I made this because my partner is watching a lot of the World Cup but
-			skipping the matches where nobody scores, because those aren&rsquo;t as
-			exciting and there are <em>a lot</em> of matches.</p>
-			<p>This is a good way to check on the matches that happened overnight or
-			while you were working and know if you can get by with a 90-second
-			highlight instead of a 90-minute match.</p>
+			<p>I made this because my partner loves to watch World Cup matches but
+			wants to skip the matches where nobody scores, because those aren&rsquo;t
+			as exciting and there are <em>a lot</em> of matches.</p>
+			<p>This site makes it easy to check on matches from the day to find out if
+			you can get by with a the highlights instead of a 90-minute match.</p>
 		</details>
 	</footer>
 	<script>
