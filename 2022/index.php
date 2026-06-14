@@ -164,17 +164,23 @@
   <main>
     <div class="matches">
       <?php
+      // This used to rely on https://worldcupjson.net, but that no longer
+      // exists. But that's OK, because the 2022 World Cup is over and we can
+      // rely on a local finalized JSON file.
+
+      $matches_file = 'matches-2022.json';
+
       // Save the JSON response to a local file periodically so that we don't
       // overload the API server.
-      if ( file_exists( 'matches.json' ) && filemtime( 'matches.json' ) > strtotime( '5 minutes ago' ) ) {
-        $matches_json = file_get_contents( 'matches.json' );
+      if ( file_exists( $matches_file ) && filemtime( $matches_file ) > strtotime( '5 minutes ago' ) ) {
+        $matches_json = file_get_contents( $matches_file );
       }
       else {
         if ( $matches_json = file_get_contents( 'https://worldcupjson.net/matches/' ) ) {
-          file_put_contents( 'matches.json', $matches_json );
+          file_put_contents( $matches_file, $matches_json );
         }
         else {
-          $matches_json = file_get_contents( 'matches.json' );
+          $matches_json = file_get_contents( $matches_file );
         }
       }
 
@@ -184,7 +190,7 @@
       if ( empty( $matches ) ) {
         echo '<p>Something&rsquo;s wrong&mdash;could not get matches data! 😩</p>';
       } else {
-        $output .= '<details><summary>Past Matches</summary>';
+        $output .= '<details open><summary>Past Matches</summary>';
         $past_matches_section_open = true;
         $in_future_and_new_stage = false;
 
@@ -289,7 +295,7 @@
     </div>
   </main>
   <footer>
-    <details>
+    <details open>
       <summary>FAQ &amp; About This Site</summary>
       <h2>Why are some matchups hidden?</h2>
       <p>To prevent spoilers, I hide the matchup of games in future stages that
