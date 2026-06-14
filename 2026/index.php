@@ -212,7 +212,7 @@
 
 				$past_matches_section_open = true;
 				$in_future_and_new_round   = false;
-				$loop_round                = 'Group Stage';
+				$loop_round                = '';
 
 				// Loop through all matches.
 				foreach( $matches as $match ) {
