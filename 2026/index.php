@@ -23,6 +23,12 @@
 		margin-top: 1.5rem;
 		margin-bottom: -.25rem;
 		text-transform: uppercase;
+		position: sticky;
+		top: 0;
+		background-color: #fff;
+		margin-left: -0.5rem;
+		margin-right: -0.5rem;
+		padding: 0.5rem;
 	}
 
 	h3 {
@@ -62,14 +68,15 @@
 
 	details h2 {
 		font-size: 18px;
+		background-color: #fafafa;
 	}
 
 	details h3 {
 		font-size: 16px;
 	}
 
-	details + h2 {
-		margin-top: 1rem;
+	details + div h2 {
+		margin-top: 0.5rem;
 	}
 
 	p.note {
@@ -253,7 +260,9 @@
 						$output .= '</details>';
 
 						if ( $loop_round === $match_round ) {
-							$output .= '<h2>' . $match_round . '</h2>';
+							$output .= '
+							<div class="round">
+								<h2>' . $match_round . '</h2>';
 						}
 					}
 
@@ -265,8 +274,14 @@
 					}
 
 					// Figure out if we need to show a new round heading.
-					if ( ! isset( $loop_round ) || $loop_round !== $match_round ) {
+					if ( empty( $loop_round ) || $loop_round !== $match_round ) {
+						if ( ! empty( $loop_round ) ) {
+							$output .= '</div>';
+						}
+
 						$loop_round = $match_round;
+
+						$output .= '<div class="round">';
 						$output .= '<h2>' . $loop_round . '</h2>';
 					}
 
