@@ -352,10 +352,10 @@
 					}
 
 					if ( 'playing' === $match_status ) {
-						$output .= '<span class="status in-progress">📢 IN PROGRESS!</span>';
+						$output .= '<span class="status in-progress">📢 PLAYING!</span>';
 					}
 					else if ( 'future' === $match_status ) {
-						$output .= '<span class="status upcoming">⏰ UPCOMING!</span>';
+						$output .= '<span class="status upcoming">⏰ SOON!</span>';
 					}
 					else if ( 'completed' === $match_status ) {
 						if ( $match_round === 'Group Stage' ) {
@@ -368,7 +368,7 @@
 							}
 						}
 						else {
-							$output .= '<span class="status completed-match">COMPLETED! ⚽️</span>';
+							$output .= '<span class="status completed-match">COMPLETE! ⚽️</span>';
 						}
 					}
 
