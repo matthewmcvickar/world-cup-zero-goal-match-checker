@@ -374,8 +374,8 @@
 					}
 					else if ( 'completed' === $match_status ) {
 						if ( $match_round === 'Group Stage' ) {
-							if ( isset( $match->goals1 ) && isset( $match->goals2 )
-								&& $match->goals1 === 0 && $match->goals2 === 0 ) {
+							if ( isset( $match->score->ft )
+								&& 0 === $match->score->ft[0] && 0 === $match->score->ft[1] ) {
 								$output .= '<span class="status zero-goal-match">0-0! 🥱</span>';
 							}
 							else {
