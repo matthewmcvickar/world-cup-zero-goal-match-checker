@@ -237,13 +237,25 @@
 					$match_start_here  = ( clone $match_start_in_match_timezone )->setTimezone( $here_timezone );
 					$match_end_here    = ( clone $match_start_here )->modify( '+ 2 hours' );
 
-					// Get the status of the match.
-					if ( $match_start_in_match_timezone < $current_time_in_match_timezone && $current_time_in_match_timezone < $match_end_in_match_timezone ) {
+					// Get the status of the match:
+					// 1. If the final score is in, the match is over.
+					if ( ! empty( $match->score->ft ) ) {
+						$match_status = 'completed';
+					}
+					// 2. If the final score isn't in and the current time is after the
+					//    match started and before two hours later, we can assume the
+					//    match is in progress.
+					else if ( $match_start_in_match_timezone < $current_time_in_match_timezone && $current_time_in_match_timezone < $match_end_in_match_timezone ) {
 						$match_status = 'playing';
 					}
+					// 3. If the final score isn't in and the current time is after the
+					//    match start but not within two hours of the match start, we can
+					//    assume the match is over.
 					else if ( $match_start_in_match_timezone < $current_time_in_match_timezone ) {
 						$match_status = 'completed';
 					}
+					// 4. If the final score isn't in and the current time is before the
+					//    match start, the match is in the future.
 					else {
 						$match_status = 'future';
 					}
