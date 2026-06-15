@@ -5,6 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>World Cup 2026 Zero-goal Match Checker</title>
+	<link rel="apple-touch-icon" sizes="600x600" href="./favicon-v2.png">
+	<link rel="icon" type="image/png" sizes="600x600" href="./favicon-v2.png">
 	<style>
 	body {
 		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
