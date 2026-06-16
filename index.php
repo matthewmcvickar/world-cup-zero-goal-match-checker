@@ -86,13 +86,10 @@
 		text-align: center;
 	}
 
-	p {
+	.match {
+		display: flex;
 		font-size: 16px;
 		margin: 1rem 0;
-	}
-
-	.matches p {
-		display: flex;
 	}
 
 	.time {
@@ -176,12 +173,16 @@
 		color: darkgreen;
 	}
 
-	.ground,
-	.group {
-		font-size: 13px;
+	.group-and-ground {
 		color: #aaa;
-		min-width: 100%;
+		font-size: 13px;
 		margin-top: 0.25rem;
+		min-width: 100%;
+		text-wrap: balance;
+	}
+
+	.group + .ground {
+		margin-left: 1en;
 	}
 
 	.buttons {
@@ -432,7 +433,7 @@
 						$hidden_attr = '';
 					}
 
-					$output .= '<p>
+					$output .= '<div class="match">
 						<span class="time">' . $match_start_here->format( 'ga' ) . ' <small>PT</small></span>
 						<span class="matchup-and-status">';
 
@@ -463,15 +464,19 @@
 						}
 					}
 
-					$output .= '<span class="ground">in ' . $match->ground . '</span>';
+					$output .= '<span class="group-and-ground">';
 
 					if ( ! empty( $match->group ) ) {
-						$output .= '<span class="group">' . $match->group . '</span>';
+						$output .= '<span class="group">' . $match->group . '</span> ';
 					}
+
+					$output .= '<span class="ground">in ' . $match->ground . '</span>';
+
+					$output .= '</span>';
 
 					$output .= '
 						</span>
-					</p>';
+					</div>';
 				}
 
 				echo $output;
