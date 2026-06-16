@@ -298,12 +298,12 @@
     <details open>
       <summary>FAQ &amp; About This Site</summary>
       <h2>Why are some matchups hidden?</h2>
-      <p>To prevent spoilers, I hide the matchup of games in future stages that
-      would reveal the result of a game happening today. (If the most recently
-      completed game happened before today, no matchups are hidden.)</p>
-      <h2>A Note About 0&ndash;0 Games</h2>
-      <p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
-      draw. After that, games must have a winner.</p>
+      <p>To prevent spoilers, I hide the matchup of matches in future stages that
+      would reveal the result of a match happening today. (If the most recently
+      completed match happened before today, no matchups are hidden.)</p>
+      <h2>A Note About 0&ndash;0 Matches</h2>
+      <p>Only matches in the Group Stage (the first stage) can end in a 0&ndash;0
+      draw. After that, matches must have a winner.</p>
       <h2>Who made this?</h2>
       <p>This was built by <a href="https://matthewmcvickar.com">Matthew McVickar</a>,
       a software engineer in Portland, OR, US.</p>
