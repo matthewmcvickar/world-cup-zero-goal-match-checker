@@ -31,9 +31,11 @@
 		margin-left: -0.5rem;
 		margin-right: -0.5rem;
 		padding: 0.5rem;
+		color: #e1870a;
 	}
 
 	h3 {
+		color: #5c778f;
 		font-size: 18px;
 		margin-top: 1.25rem;
 		margin-bottom: -.25rem;
@@ -205,8 +207,8 @@
 </head>
 <body>
 	<h1>
-		⚽️&ensp;World Cup 2026&ensp;🏆<br>
-		0️⃣&ensp;Zero-goal Match Checker&ensp;🧐
+		<span style="color: #e1870a;">⚽️&ensp;World Cup 2026&ensp;🏆</span><br>
+		<span style="color: #5c778f;">0️⃣&ensp;Zero-goal Match Checker&ensp;🧐</span>
 	</h1>
 	<main>
 		<div class="matches">
