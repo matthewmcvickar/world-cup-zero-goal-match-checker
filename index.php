@@ -4,22 +4,47 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>World Cup 2026 Zero-goal Match Checker</title>
+	<title>Nil-nil Or No — World Cup 2026 Zero-goal Match Checker</title>
 	<link rel="apple-touch-icon" sizes="600x600" href="./favicon.png?v=20260615142134">
 	<link rel="icon" type="image/png" sizes="600x600" href="./favicon.png?v=20260615142134">
 	<style>
+	:root {
+		--primary-color: #1E90FF;
+		--secondary-color: #666;
+
+		--default-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		--heading-font: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+	}
+
 	body {
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		font-family: var(--default-font);
 		max-width: 600px;
 		margin: 1rem auto;
 	}
 
 	h1 {
-		font-size: 23px;
+		line-height: 1;
+		margin-top: 0.25rem;
 		text-align: center;
 	}
 
+	.title {
+		color: var(--primary-color);
+		font-family: var(--heading-font);
+		font-size: 3.2rem;
+		letter-spacing: -0.38rem;
+		text-transform: uppercase;
+		text-shadow: -2px 2px 0 #ccc;
+	}
+
+	.subtitle {
+		color: var(--secondary-color);
+		font-size: 1rem;
+		letter-spacing: -0.025rem;
+	}
+
 	h2 {
+		font-family: var(--heading-font);
 		font-size: 20px;
 		font-weight: bold;
 		margin-top: 1.25rem;
@@ -31,14 +56,15 @@
 		margin-left: -0.5rem;
 		margin-right: -0.5rem;
 		padding: 0 0.5rem;
-		color: #e1870a;
+		color: var(--primary-color);
 	}
 
 	h3 {
-		color: #5c778f;
+		color: var(--secondary-color);
 		font-size: 18px;
+		letter-spacing: -0.025rem;
 		margin-top: 1.25rem;
-		margin-bottom: -.25rem;
+		margin-bottom: 0;
 	}
 
 	a:link,
@@ -49,9 +75,8 @@
 		text-decoration: underline;
 	}
 
-	main,
-	footer {
-		margin: 0 1rem;
+	main {
+		margin: 0 12px;
 	}
 
 	details {
@@ -80,10 +105,16 @@
 		font-size: 16px;
 	}
 
-	p.note {
-		font-size: 12px;
-		color: #aaa;
-		text-align: center;
+	.about h2 {
+		color: #333;
+		font-size: 1rem;
+		margin-bottom: 0.5rem;
+		text-transform: none;
+	}
+
+	.about p {
+		line-height: 1.4;
+		margin: 0 0 1rem 0;
 	}
 
 	.match {
@@ -101,31 +132,19 @@
 		}
 	}
 
-	.matchup-and-status {
+	.match-details {
 		display: flex;
 		flex: 1;
 		flex-wrap: wrap;
 	}
 
-	.matchup,
+	.teams,
 	.reveal-button {
 		margin-right: 6px;
 	}
 
-	.matchup {
+	.teams {
 		font-weight: 600;
-	}
-
-	.about h2 {
-		color: #333;
-		font-size: 1rem;
-		margin-bottom: 0.5rem;
-		text-transform: none;
-	}
-
-	.about p {
-		line-height: 1.4;
-		margin: 0 0 1rem 0;
 	}
 
 	button.reveal-button {
@@ -152,25 +171,33 @@
 		}
 	}
 
-	.status {
+	.status,
+	.score {
 		font-weight: 700;
 	}
 
-	.upcoming {
+	.status--upcoming {
 		color: #757575;
 	}
 
-	.in-progress {
+	.status--playing {
 		color: orangered;
 	}
 
-	.zero-goal-match {
+	.status--complete {
+		color: darkgreen;
+	}
+
+	.score--zero-draw {
 		color: darkred;
 	}
 
-	.completed-match,
-	.not-zero-goal-match {
+	.score--not-zero-draw {
 		color: darkgreen;
+	}
+
+	.status + .score {
+		margin-left: 0.4rem;
 	}
 
 	.group-and-ground {
@@ -217,19 +244,19 @@
 </head>
 <body>
 	<h1>
-		<span style="color: #e1870a;">⚽️&ensp;World Cup 2026&ensp;🏆</span><br>
-		<span style="color: #5c778f;">0️⃣&ensp;Zero-goal Match Checker&ensp;🧐</span>
+		<span class="title">Nil-nil Or No</span><br>
+		<span class="subtitle">The World Cup 2026 Zero-goal Match Checker</span>
 	</h1>
 	<main>
 		<details class="about">
 			<summary>FAQ &amp; About This Site</summary>
-			<h2>Which games can end in a 0&ndash;0 draw?</h2>
-			<p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
-				draw. After that, games must have a winner.</p>
-			<h2>Why are some matchups hidden?</h2>
-			<p>To prevent spoilers, I hide the matchup of games in future rounds that
-			would reveal the result of a game happening today. (If the most recently
-			completed game happened before today, no matchups are hidden.)</p>
+			<h2>Which matches can end in a 0&ndash;0 draw?</h2>
+			<p>Only matches in the Group Stage (the first stage) can end in a 0&ndash;0
+			draw. After that, matches must have a winner.</p>
+			<h2>Why are some team matchups hidden?</h2>
+			<p>To prevent spoilers, I hide the teams for matches in future rounds that
+			would reveal the result of a match happening today. (If the most recently
+			completed match happened before today, no matchups are hidden.)</p>
 			<h2>Who made this?</h2>
 			<p>This was built by <a href="https://matthewmcvickar.com">Matt McVickar</a>, a software engineer in Portland, OR, US.</p>
 			<h2>How does it work?</h2>
@@ -434,37 +461,41 @@
 					}
 
 					$output .= '<div class="match">
-						<span class="time">' . $match_start_here->format( 'ga' ) . ' <small>PT</small></span>
-						<span class="matchup-and-status">';
+						<div class="time">' . $match_start_here->format( 'ga' ) . ' <small>PT</small></div>
+						<div class="match-details">';
 
-					$output .= '<span class="matchup" ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
+					$output .= '<span class="teams" ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
 
 					if ( ! $show_teams ) {
-						$output .= '<button class="reveal-button">Reveal Matchup</button>';
+						$output .= '<button class="reveal-button">Reveal Teams</button>';
 					}
 
+					$output .= '<span class="status-and-score">';
+
 					if ( 'playing' === $match_status ) {
-						$output .= '<span class="status in-progress">📢 PLAYING!</span>';
+						$output .= '<span class="status status--playing">📢 PLAYING!</span>';
 					}
 					else if ( 'future' === $match_status && $match_is_today ) {
-						$output .= '<span class="status upcoming">⏰ SOON!</span>';
+						$output .= '<span class="status status--upcoming">⏰ SOON!</span>';
 					}
 					else if ( 'completed' === $match_status ) {
+						$output .= '<span class="status status--complete">DONE!</span>';
+
 						if ( $match_round === 'Group Stage' ) {
 							if ( isset( $match->score->ft )
 								&& 0 === $match->score->ft[0] && 0 === $match->score->ft[1] ) {
-								$output .= '<span class="status zero-goal-match">0-0! 🥱</span>';
+								$output .= '<span class="score score--zero-draw" data-draw-or-not aria-hidden="true">0-0! 🥱</span>';
 							}
 							else {
-								$output .= '<span class="status not-zero-goal-match">NOT 0-0! ⚽️</span>';
+								$output .= '<span class="score score--not-zero-draw" data-draw-or-not aria-hidden="true">NOT 0-0! ⚽️</span>';
 							}
-						}
-						else {
-							$output .= '<span class="status completed-match">COMPLETE! ⚽️</span>';
 						}
 					}
 
-					$output .= '<span class="group-and-ground">';
+					$output .= '
+						</span>
+						<span class="group-and-ground">
+					';
 
 					if ( ! empty( $match->group ) ) {
 						$output .= '<span class="group">' . $match->group . '</span> ';
@@ -475,7 +506,7 @@
 					$output .= '</span>';
 
 					$output .= '
-						</span>
+						</div>
 					</div>';
 				}
 
