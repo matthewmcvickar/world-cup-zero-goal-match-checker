@@ -22,7 +22,7 @@
 	h2 {
 		font-size: 20px;
 		font-weight: bold;
-		margin-top: 1.5rem;
+		margin-top: 1.25rem;
 		margin-bottom: -.25rem;
 		text-transform: uppercase;
 		position: sticky;
@@ -30,7 +30,7 @@
 		background-color: #fff;
 		margin-left: -0.5rem;
 		margin-right: -0.5rem;
-		padding: 0.5rem;
+		padding: 0 0.5rem;
 		color: #e1870a;
 	}
 
@@ -60,6 +60,7 @@
 		border-top: 1px solid #eee;
 		margin-left: -1rem;
 		margin-right: -1rem;
+		margin-bottom: 1rem;
 		padding: 0.5rem 1rem;
 	}
 
@@ -77,10 +78,6 @@
 
 	details h3 {
 		font-size: 16px;
-	}
-
-	details + div h2 {
-		margin-top: 0.5rem;
 	}
 
 	p.note {
@@ -120,6 +117,18 @@
 
 	.matchup {
 		font-weight: 600;
+	}
+
+	.about h2 {
+		color: #333;
+		font-size: 1rem;
+		margin-bottom: 0.5rem;
+		text-transform: none;
+	}
+
+	.about p {
+		line-height: 1.4;
+		margin: 0 0 1rem 0;
 	}
 
 	button.reveal-button {
@@ -175,8 +184,8 @@
 		margin-top: 0.25rem;
 	}
 
-	footer {
-		margin-top: 2rem;
+	.buttons {
+
 	}
 
 	.reload-button {
@@ -211,6 +220,30 @@
 		<span style="color: #5c778f;">0️⃣&ensp;Zero-goal Match Checker&ensp;🧐</span>
 	</h1>
 	<main>
+		<details class="about">
+			<summary>FAQ &amp; About This Site</summary>
+			<h2>Which games can end in a 0&ndash;0 draw?</h2>
+			<p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
+				draw. After that, games must have a winner.</p>
+			<h2>Why are some matchups hidden?</h2>
+			<p>To prevent spoilers, I hide the matchup of games in future rounds that
+			would reveal the result of a game happening today. (If the most recently
+			completed game happened before today, no matchups are hidden.)</p>
+			<h2>Who made this?</h2>
+			<p>This was built by <a href="https://matthewmcvickar.com">Matt McVickar</a>, a software engineer in Portland, OR, US.</p>
+			<h2>How does it work?</h2>
+			<p>The code is <a href="https://github.com/matthewmcvickar/world-cup-zero-goal-match-checker">open source on GitHub</a>.</p>
+			<p>The World Cup match data comes from the <a href="https://github.com/openfootball/worldcup.json">openfootball worldcup.json project</a>.
+			New data is fetched and saved to a local JSON file whenever this page
+			loads, as long as it has been at least five minutes since the last time
+			it was fetched.</p>
+			<h2>Why do this?</h2>
+			<p>I made this because my partner loves to watch World Cup matches but
+			wants to skip the matches where nobody scores, because those aren&rsquo;t
+			as exciting and there are <em>a lot</em> of matches.</p>
+			<p>This site makes it easy to check on matches from the day to find out if
+			you can get by with a the highlights instead of a 90-minute match.</p>
+		</details>
 		<div class="matches">
 			<?php
 			// Save the JSON response to a local file periodically so that we don't
@@ -446,32 +479,6 @@
 			?>
 		</div>
 	</main>
-	<footer>
-		<details>
-			<summary>FAQ &amp; About This Site</summary>
-			<h2>Why are some matchups hidden?</h2>
-			<p>To prevent spoilers, I hide the matchup of games in future rounds that
-			would reveal the result of a game happening today. (If the most recently
-			completed game happened before today, no matchups are hidden.)</p>
-			<h2>A Note About 0&ndash;0 Games</h2>
-			<p>Only games in the Group Stage (the first stage) can end in a 0&ndash;0
-				draw. After that, games must have a winner.</p>
-			<h2>Who made this?</h2>
-			<p>This was built by <a href="https://matthewmcvickar.com">Matt McVickar</a>, a software engineer in Portland, OR, US.</p>
-			<h2>How does it work?</h2>
-			<p>The code is <a href="https://github.com/matthewmcvickar/world-cup-zero-goal-match-checker">open source on GitHub</a>.</p>
-			<p>The World Cup match data comes from the <a href="https://github.com/openfootball/worldcup.json">openfootball worldcup.json project</a>.
-			New data is fetched and saved to a local JSON file whenever this page
-			loads, as long as it has been at least five minutes since the last time
-			it was fetched.</p>
-			<h2>Why do this?</h2>
-			<p>I made this because my partner loves to watch World Cup matches but
-			wants to skip the matches where nobody scores, because those aren&rsquo;t
-			as exciting and there are <em>a lot</em> of matches.</p>
-			<p>This site makes it easy to check on matches from the day to find out if
-			you can get by with a the highlights instead of a 90-minute match.</p>
-		</details>
-	</footer>
 	<button class="reload-button" onclick="window.location.reload()">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M500.7 138.7L512 149.4L512 96C512 78.3 526.3 64 544 64C561.7 64 576 78.3 576 96L576 224C576 241.7 561.7 256 544 256L416 256C398.3 256 384 241.7 384 224C384 206.3 398.3 192 416 192L463.9 192L456.3 184.8C456.1 184.6 455.9 184.4 455.7 184.2C380.7 109.2 259.2 109.2 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C238.9 39.1 400.7 39 500.7 138.7z"/></svg>
 	</button>
