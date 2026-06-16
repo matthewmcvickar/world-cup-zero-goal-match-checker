@@ -264,6 +264,8 @@
 					$match_start_here  = ( clone $match_start_in_match_timezone )->setTimezone( $here_timezone );
 					$match_end_here    = ( clone $match_start_here )->modify( '+ 2 hours' );
 
+					$match_is_today = $current_time_in_match_timezone->format( 'Y-m-d' ) === $match_start_in_match_timezone->format( 'Y-m-d' );
+
 					// Get the status of the match:
 					// 1. If the final score is in, the match is over.
 					if ( ! empty( $match->score->ft ) ) {
@@ -294,7 +296,7 @@
 
 					// If this match happens today or in the future, then close the 'Past
 					// Matches' section.
-					if ( $past_matches_section_open && $current_time_in_match_timezone->format( 'd' ) <= $match_start_in_match_timezone->format( 'd' ) ) {
+					if ( $past_matches_section_open && $current_time_in_match_timezone->format( 'Y-m-d' ) <= $match_start_in_match_timezone->format( 'Y-m-d' ) ) {
 						$past_matches_section_open = false;
 						$output .= '</details>';
 
@@ -408,7 +410,7 @@
 					if ( 'playing' === $match_status ) {
 						$output .= '<span class="status in-progress">📢 PLAYING!</span>';
 					}
-					else if ( 'future' === $match_status ) {
+					else if ( 'future' === $match_status && $match_is_today ) {
 						$output .= '<span class="status upcoming">⏰ SOON!</span>';
 					}
 					else if ( 'completed' === $match_status ) {
