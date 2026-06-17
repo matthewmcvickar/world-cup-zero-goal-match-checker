@@ -9,10 +9,9 @@
 	<link rel="icon" type="image/png" sizes="600x600" href="./favicon.png?v=20260615142134">
 	<style>
 	:root {
-		--primary-color: #1E90FF;
-		--secondary-color: #666;
-
+		--primary-color:    #1E90FF;
 		--primary-color-bg: #bfdfff;
+		--secondary-color:  #666;
 
 		--default-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 		--heading-font: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
@@ -20,8 +19,8 @@
 
 	body {
 		font-family: var(--default-font);
-		max-width: 600px;
 		margin: 1rem auto;
+		max-width: 600px;
 	}
 
 	h1 {
@@ -35,8 +34,8 @@
 		font-family: var(--heading-font);
 		font-size: 3.2rem;
 		letter-spacing: -0.38rem;
-		text-transform: uppercase;
 		text-shadow: -2px 2px 0 #ccc;
+		text-transform: uppercase;
 	}
 
 	.subtitle {
@@ -46,27 +45,39 @@
 	}
 
 	h2 {
+		background-color: #fff;
+		color: var(--primary-color);
 		font-family: var(--heading-font);
 		font-size: 20px;
 		font-weight: bold;
-		margin-top: 1.25rem;
 		margin-bottom: -.25rem;
-		text-transform: uppercase;
-		position: sticky;
-		top: 0;
-		background-color: #fff;
 		margin-left: -0.5rem;
 		margin-right: -0.5rem;
+		margin-top: 1.25rem;
 		padding: 0 0.5rem;
-		color: var(--primary-color);
+
+		position: sticky;
+		text-transform: uppercase;
+		top: 0;
+		z-index: 2;
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 100%;
+			width: 100%;
+			height: 18px;
+			background-image: linear-gradient(to bottom, #ffffff, #ffffff00);
+		}
 	}
 
 	h3 {
 		color: var(--secondary-color);
 		font-size: 18px;
 		letter-spacing: -0.02rem;
-		margin-top: 1.25rem;
 		margin-bottom: 0;
+		margin-top: 1.25rem;
 	}
 
 	a:link,
@@ -85,9 +96,9 @@
 		background: #fafafa;
 		border-bottom: 1px solid #eee;
 		border-top: 1px solid #eee;
+		margin-bottom: 1rem;
 		margin-left: -1rem;
 		margin-right: -1rem;
-		margin-bottom: 1rem;
 		padding: 0.5rem 1rem;
 	}
 
@@ -99,8 +110,8 @@
 	}
 
 	details h2 {
-		font-size: 18px;
 		background-color: #fafafa;
+		font-size: 18px;
 	}
 
 	details h3 {
@@ -128,8 +139,8 @@
 
 	.time {
 		font-size: 13px;
-		width: 55px;
 		min-width: 55px;
+		width: 55px;
 
 		small {
 			font-size: 10px;
@@ -138,8 +149,8 @@
 
 	.match-details {
 		display: flex;
-		flex: 1;
 		flex-wrap: wrap;
+		flex: 1;
 		gap: 0.25rem;
 		position: relative;
 	}
@@ -150,8 +161,8 @@
 
 	.zero-draw,
 	.status {
-		letter-spacing: -0.01rem;
 		font-weight: 700;
+		letter-spacing: -0.01rem;
 	}
 
 	.status--upcoming {
@@ -190,8 +201,8 @@
 	}
 
 	button {
-		appearance: none;
 		-webkit-appearance: none;
+		appearance: none;
 		background: var(--primary-color-bg);
 		border-radius: 10px;
 		border: 1px solid var(--primary-color);
@@ -202,11 +213,11 @@
 	}
 
 	button[data-action="reveal-zero-draw"] {
-		position: absolute;
-		top: 0;
-		right: 0;
-		border-color: var(--primary-color);
 		background-color: var(--primary-color-bg);
+		border-color: var(--primary-color);
+		position: absolute;
+		right: 0;
+		top: 1px;
 	}
 
 	.big-buttons {
@@ -220,37 +231,33 @@
 		width: calc(100% - 60px);
 
 		button {
+			align-content: center;
 			align-items: center;
 			background: #eaeaea;
-			border: 2px solid var(--secondary-color);
 			border-radius: 20px;
+			border: 2px solid var(--secondary-color);
 			color: var(--secondary-color);
 			display: flex;
 			flex-direction: row;
 			font-size: 1rem;
 			font-weight: 600;
+			gap: 0.25rem;
 			height: 40px;
-			padding: 0 0.65rem 0 0.75rem;
 			justify-content: center;
-			align-content: center;
+			padding: 0 0.65rem 0 0.75rem;
 			vertical-align: auto;
 
 			svg {
 				fill: currentColor;
-				width: 24px;
 				height: 24px;
-				margin-right: 0.25rem;
+				width: 24px;
 			}
 		}
 
 		button.button--icon-only {
+			border-radius: 50%;
 			padding: 0;
 			width: 40px;
-			border-radius: 50%;
-
-			svg {
-				margin-right: 0;
-			}
 		}
 	}
 	</style>
