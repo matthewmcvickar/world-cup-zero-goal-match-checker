@@ -12,6 +12,8 @@
 		--primary-color: #1E90FF;
 		--secondary-color: #666;
 
+		--primary-color-bg: #bfdfff;
+
 		--default-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 		--heading-font: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 	}
@@ -62,7 +64,7 @@
 	h3 {
 		color: var(--secondary-color);
 		font-size: 18px;
-		letter-spacing: -0.025rem;
+		letter-spacing: -0.02rem;
 		margin-top: 1.25rem;
 		margin-bottom: 0;
 	}
@@ -107,6 +109,7 @@
 
 	.about h2 {
 		color: #333;
+		font-family: var(--default-font);
 		font-size: 1rem;
 		margin-bottom: 0.5rem;
 		text-transform: none;
@@ -124,11 +127,12 @@
 	}
 
 	.time {
-		width: 75px;
-		min-width: 75px;
+		font-size: 13px;
+		width: 55px;
+		min-width: 55px;
 
 		small {
-			font-size: 12px;
+			font-size: 10px;
 		}
 	}
 
@@ -136,43 +140,17 @@
 		display: flex;
 		flex: 1;
 		flex-wrap: wrap;
-	}
-
-	.teams,
-	.reveal-button {
-		margin-right: 6px;
+		gap: 0.25rem;
+		position: relative;
 	}
 
 	.teams {
 		font-weight: 600;
 	}
 
-	button.reveal-button {
-		appearance: none;
-		-webkit-appearance: none;
-		border: 1px solid #aaa;
-		border-radius: 3px;
-		background: linear-gradient(to bottom, #fff, #e8e8e8);
-		color: #333;
-		cursor: pointer;
-		font-weight: bold;
-		line-height: 1;
-		padding: 2px 5px;
-		text-transform: uppercase;
-	}
-
-	@media (hover: hover) {
-		button.reveal-button {
-			opacity: 0.8;
-		}
-
-		button.reveal-button:hover {
-			opacity: 1;
-		}
-	}
-
-	.status,
-	.score {
+	.zero-draw,
+	.status {
+		letter-spacing: -0.01rem;
 		font-weight: 700;
 	}
 
@@ -188,22 +166,17 @@
 		color: darkgreen;
 	}
 
-	.score--zero-draw {
+	.zero-draw--true {
 		color: darkred;
 	}
 
-	.score--not-zero-draw {
+	.zero-draw--false {
 		color: darkgreen;
-	}
-
-	.status + .score {
-		margin-left: 0.4rem;
 	}
 
 	.group-and-ground {
 		color: #aaa;
 		font-size: 13px;
-		margin-top: 0.25rem;
 		min-width: 100%;
 		text-wrap: balance;
 	}
@@ -212,33 +185,73 @@
 		margin-left: 1en;
 	}
 
-	.buttons {
-
+	[hidden] {
+		display: none;
 	}
 
-	.reload-button {
+	button {
 		appearance: none;
 		-webkit-appearance: none;
-		border: 2px solid #888;
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		background: #eaeaea;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		position: sticky;
-		bottom: 35px;
-		margin-left: auto;
-		margin-right: 35px;
-		margin-top: -35px;
+		background: var(--primary-color-bg);
+		border-radius: 10px;
+		border: 1px solid var(--primary-color);
+		color: #000;
+		font-weight: 500;
+		line-height: 1;
+		padding: 0.2rem 0.5rem;
 	}
 
-	.reload-button svg {
-		fill: #888;
-		width: 24px;
-		height: 24px;
+	button[data-action="reveal-zero-draw"] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		border-color: var(--primary-color);
+		background-color: var(--primary-color-bg);
+	}
+
+	.big-buttons {
+		bottom: 30px;
+		display: flex;
+		gap: 1rem;
+		justify-content: flex-end;
+		margin: 3rem 0 0 0;
+		padding: 0 30px;
+		position: sticky;
+		width: calc(100% - 60px);
+
+		button {
+			align-items: center;
+			background: #eaeaea;
+			border: 2px solid var(--secondary-color);
+			border-radius: 20px;
+			color: var(--secondary-color);
+			display: flex;
+			flex-direction: row;
+			font-size: 1rem;
+			font-weight: 600;
+			height: 40px;
+			padding: 0 0.65rem 0 0.75rem;
+			justify-content: center;
+			align-content: center;
+			vertical-align: auto;
+
+			svg {
+				fill: currentColor;
+				width: 24px;
+				height: 24px;
+				margin-right: 0.25rem;
+			}
+		}
+
+		button.button--icon-only {
+			padding: 0;
+			width: 40px;
+			border-radius: 50%;
+
+			svg {
+				margin-right: 0;
+			}
+		}
 	}
 	</style>
 </head>
@@ -249,7 +262,16 @@
 	</h1>
 	<main>
 		<details class="about">
-			<summary>FAQ &amp; About This Site</summary>
+			<summary>About</summary>
+			<h2>What?</h2>
+			<p>This is a complete World Cup 2026 match schedule that tells you whether
+			a game ended in a 0&ndash;0 draw. That&rsquo;s it!</p>
+			<h2>Why?</h2>
+			<p>I made this because my partner loves to watch World Cup matches but
+			wants to skip the matches where nobody scores, because those (usually)
+			aren&rsquo;t very exciting and there are <em>a lot</em> of matches.</p>
+			<p>This site makes it easy to check on matches from the day to find out if
+			you can get by with a the highlights instead of a 90-minute match.</p>
 			<h2>Which matches can end in a 0&ndash;0 draw?</h2>
 			<p>Only matches in the Group Stage (the first stage) can end in a 0&ndash;0
 			draw. After that, matches must have a winner.</p>
@@ -265,12 +287,6 @@
 			New data is fetched and saved to a local JSON file whenever this page
 			loads, as long as it has been at least five minutes since the last time
 			it was fetched.</p>
-			<h2>Why do this?</h2>
-			<p>I made this because my partner loves to watch World Cup matches but
-			wants to skip the matches where nobody scores, because those aren&rsquo;t
-			as exciting and there are <em>a lot</em> of matches.</p>
-			<p>This site makes it easy to check on matches from the day to find out if
-			you can get by with a the highlights instead of a 90-minute match.</p>
 		</details>
 		<div class="matches">
 			<?php
@@ -398,7 +414,8 @@
 
 					// Show match info.
 					$show_teams  = false;
-					$hidden_attr = 'hidden';
+					$hidden_attr = 'ariaHidden="true" hidden';
+
 					$team_1_name = $match->team1;
 					$team_2_name = $match->team2;
 
@@ -464,36 +481,34 @@
 						<div class="time">' . $match_start_here->format( 'ga' ) . ' <small>PT</small></div>
 						<div class="match-details">';
 
-					$output .= '<span class="teams" ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
+					$output .= '<span class="teams" data-teams ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
 
 					if ( ! $show_teams ) {
-						$output .= '<button class="reveal-button">Reveal Teams</button>';
+						$output .= '<button data-action="reveal-teams">Reveal Teams</button>';
 					}
-
-					$output .= '<span class="status-and-score">';
 
 					if ( 'playing' === $match_status ) {
 						$output .= '<span class="status status--playing">📢 PLAYING!</span>';
 					}
-					else if ( 'future' === $match_status && $match_is_today ) {
-						$output .= '<span class="status status--upcoming">⏰ SOON!</span>';
-					}
+					// else if ( 'future' === $match_status && $match_is_today ) {
+					// 	$output .= '<span class="status status--upcoming">⏰ SOON!</span>';
+					// }
 					else if ( 'completed' === $match_status ) {
-						$output .= '<span class="status status--complete">DONE!</span>';
+						// $output .= '<span class="status status--complete">DONE!</span>';
 
 						if ( $match_round === 'Group Stage' ) {
 							if ( isset( $match->score->ft )
 								&& 0 === $match->score->ft[0] && 0 === $match->score->ft[1] ) {
-								$output .= '<span class="score score--zero-draw" data-draw-or-not aria-hidden="true">0-0! 🥱</span>';
+								$output .= '<span class="zero-draw zero-draw--true" data-zero-draw="true" aria-hidden="true" hidden>0&ndash;0! 🥱</span>';
 							}
 							else {
-								$output .= '<span class="score score--not-zero-draw" data-draw-or-not aria-hidden="true">NOT 0-0! ⚽️</span>';
+								$output .= '<span class="zero-draw zero-draw--false" data-zero-draw="false" aria-hidden="true" hidden>NOT 0&ndash;0! ⚽️</span>';
 							}
+							$output .= '<button data-action="reveal-zero-draw">Reveal if Nil-nil</button>';
 						}
 					}
 
 					$output .= '
-						</span>
 						<span class="group-and-ground">
 					';
 
@@ -501,9 +516,9 @@
 						$output .= '<span class="group">' . $match->group . '</span> ';
 					}
 
-					$output .= '<span class="ground">in ' . $match->ground . '</span>';
-
-					$output .= '</span>';
+					$output .= '
+							<span class="ground">in ' . $match->ground . '</span>
+						</span>';
 
 					$output .= '
 						</div>
@@ -515,16 +530,54 @@
 			?>
 		</div>
 	</main>
-	<button class="reload-button" onclick="window.location.reload()">
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M500.7 138.7L512 149.4L512 96C512 78.3 526.3 64 544 64C561.7 64 576 78.3 576 96L576 224C576 241.7 561.7 256 544 256L416 256C398.3 256 384 241.7 384 224C384 206.3 398.3 192 416 192L463.9 192L456.3 184.8C456.1 184.6 455.9 184.4 455.7 184.2C380.7 109.2 259.2 109.2 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C238.9 39.1 400.7 39 500.7 138.7z"/></svg>
-	</button>
+	<div class="big-buttons">
+		<button data-action="reveal-all-zero-draws">
+			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Pro v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2026 Fonticons, Inc.--><path d="M376 88C376 57.1 350.9 32 320 32C289.1 32 264 57.1 264 88C264 118.9 289.1 144 320 144C350.9 144 376 118.9 376 88zM179.7 245C180.9 242 183.9 240 187.1 240L223 240L200.3 330.6C192 363.8 211.3 397.6 244 407.4L340 436.2L290.8 547C283.6 563.1 290.9 582.1 307 589.2C323.1 596.3 342.1 589.1 349.2 573L405.8 445.6C417.5 419.2 403.4 388.4 375.7 380.1L300.3 357.5L321 287.1L331 304.2C342.5 323.9 363.5 336 386.3 336L447.9 336C465.6 336 479.9 321.7 479.9 304C479.9 286.3 465.6 272 447.9 272L386.3 272L353.5 215.7C339.2 191.1 312.9 176 284.4 176L187.1 176C157.7 176 131.2 193.9 120.2 221.3L98.3 276.1C91.7 292.5 99.7 311.1 116.1 317.7C132.5 324.3 151.1 316.3 157.7 299.9L179.7 245zM167.8 452.6C165.9 458 162.5 462.9 158 466.5L75.6 534.5C62 545.7 60 565.9 71.3 579.5C82.6 593.1 102.7 595.1 116.3 583.8L198.7 515.9C212.1 504.9 222.2 490.4 228 474.1L234.9 454.8L230.2 453.4C209.8 447.3 192.3 435.8 179 421L167.7 452.7zM512 608C547.3 608 576 579.3 576 544C576 508.7 547.3 480 512 480C476.7 480 448 508.7 448 544C448 579.3 476.7 608 512 608z"/></svg>
+			<span>Reveal All Draws</span>
+		</button>
+		<button class="button--icon-only" data-action="reload" aria-label="Reload">
+			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Pro v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2026 Fonticons, Inc.--><path d="M500.7 138.7L512 149.4L512 96C512 78.3 526.3 64 544 64C561.7 64 576 78.3 576 96L576 224C576 241.7 561.7 256 544 256L416 256C398.3 256 384 241.7 384 224C384 206.3 398.3 192 416 192L463.9 192L456.3 184.8C456.1 184.6 455.9 184.4 455.7 184.2C380.7 109.2 259.2 109.2 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C238.9 39.1 400.7 39 500.7 138.7z"/></svg>
+		</button>
+	</div>
 	<script>
-	document.querySelectorAll('.reveal-button').forEach( (button) => {
+	document.querySelectorAll('button').forEach((button) => {
 		button.addEventListener('click', (event) => {
-			event.target.hidden = true;
-			event.target.previousElementSibling.hidden = false;
-		} );
-	} );
+			event.preventDefault();
+
+			switch (button.dataset.action) {
+				case 'reload':
+					window.location.reload();
+					break;
+
+				case 'reveal-all-zero-draws':
+					event.target.disabled = true;
+					event.target.ariaHidden = true;
+					document.querySelectorAll('[data-zero-draw]').forEach((element) => {
+						element.hidden = false;
+						element.ariaHidden = false;
+					});
+					document.querySelectorAll('button[data-action="reveal-zero-draw"]').forEach((element) => {
+						element.hidden = true;
+						element.ariaHidden = true;
+					});
+					break;
+
+				case 'reveal-zero-draw':
+					event.target.hidden = true;
+					event.target.ariaHidden = true;
+					event.target.previousElementSibling.hidden = false;
+					event.target.previousElementSibling.ariaHidden = false;
+					break;
+
+				case 'reveal-teams':
+					event.target.hidden = true;
+					event.target.ariaHidden = true;
+					event.target.previousElementSibling.hidden = false;
+					event.target.previousElementSibling.ariaHidden = false;
+					break;
+			}
+		});
+	});
 	</script>
 </body>
 </html>
