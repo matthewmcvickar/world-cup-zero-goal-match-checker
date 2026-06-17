@@ -45,7 +45,6 @@
 	}
 
 	h2 {
-		background-color: #fff;
 		color: var(--primary-color);
 		font-family: var(--heading-font);
 		font-size: 20px;
@@ -55,13 +54,16 @@
 		margin-right: -0.5rem;
 		margin-top: 1.25rem;
 		padding: 0 0.5rem;
-
-		position: sticky;
 		text-transform: uppercase;
+	}
+
+	.today-and-future-matches h2 {
+		position: sticky;
 		top: 0;
 		z-index: 2;
 
 		&::after {
+			background-color: #fff;
 			content: "";
 			position: absolute;
 			left: 0;
@@ -384,7 +386,8 @@
 					// Matches' section.
 					if ( $past_matches_section_open && $current_time_in_match_timezone->format( 'Y-m-d' ) <= $match_start_in_match_timezone->format( 'Y-m-d' ) ) {
 						$past_matches_section_open = false;
-						$output .= '</details>';
+						$output .= '</details>
+						<div class="today-and-future-matches">';
 
 						if ( $loop_round === $match_round ) {
 							$output .= '
@@ -535,6 +538,7 @@
 				echo $output;
 			}
 			?>
+			</div>
 		</div>
 	</main>
 	<div class="big-buttons">
