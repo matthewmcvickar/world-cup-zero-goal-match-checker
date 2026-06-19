@@ -182,11 +182,21 @@
 		color: darkgreen;
 	}
 
+	.zero-draw {
+		border-radius: 4px;
+		margin-top: -0.15rem;
+		line-height: 1;
+		padding: 0.15rem 0.25rem;
+		transform: translateY(2px);
+	}
+
 	.zero-draw--true {
+		background-color: #ff450020;
 		color: darkred;
 	}
 
 	.zero-draw--false {
+		background-color: #00640020;
 		color: darkgreen;
 	}
 
@@ -223,7 +233,7 @@
 		border-color: var(--primary-color);
 		position: absolute;
 		right: 0;
-		top: 1px;
+		top: 0;
 	}
 
 	.big-buttons {
@@ -520,10 +530,10 @@
 						if ( $match_round === 'Group Stage' ) {
 							if ( isset( $match->score->ft )
 								&& 0 === $match->score->ft[0] && 0 === $match->score->ft[1] ) {
-								$output .= '<span class="zero-draw zero-draw--true" data-zero-draw="true" aria-hidden="true" hidden>0&ndash;0! 🥱</span>';
+								$output .= '<span class="zero-draw zero-draw--true" data-zero-draw="true" aria-hidden="true" hidden>0-0!</span>';
 							}
 							else {
-								$output .= '<span class="zero-draw zero-draw--false" data-zero-draw="false" aria-hidden="true" hidden>NOT 0&ndash;0! ⚽️</span>';
+								$output .= '<span class="zero-draw zero-draw--false" data-zero-draw="false" aria-hidden="true" hidden>NOT 0-0!</span>';
 							}
 							$output .= '<button data-action="reveal-zero-draw">Reveal if Nil-nil</button>';
 						}
