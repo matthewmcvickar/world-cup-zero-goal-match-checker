@@ -288,15 +288,15 @@
 			<summary>About</summary>
 			<h2>What?</h2>
 			<p>This is a complete World Cup 2026 match schedule that tells you whether
-			a game ended in a 0&ndash;0 draw. That&rsquo;s it!</p>
+			a game ended in a 0-0 draw. That&rsquo;s it!</p>
 			<h2>Why?</h2>
 			<p>I made this because my partner loves to watch World Cup matches but
 			wants to skip the matches where nobody scores, because those (usually)
 			aren&rsquo;t very exciting and there are <em>a lot</em> of matches.</p>
 			<p>This site makes it easy to check on matches from the day to find out if
 			you can get by with a the highlights instead of a 90-minute match.</p>
-			<h2>Which matches can end in a 0&ndash;0 draw?</h2>
-			<p>Only matches in the Group Stage (the first stage) can end in a 0&ndash;0
+			<h2>Which matches can end in a 0-0 draw?</h2>
+			<p>Only matches in the Group Stage (the first stage) can end in a 0-0
 			draw. After that, matches must have a winner.</p>
 			<h2>Why are some team matchups hidden?</h2>
 			<p>To prevent spoilers, I hide the teams for matches in future rounds that
