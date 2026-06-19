@@ -226,19 +226,14 @@
 		font-weight: 500;
 		line-height: 1;
 		padding: 0.2rem 0.5rem;
+	}
 
-		&:active {
-			background: var(--primary-color);
-			color: #fff;
-		}
-
-		&:disabled {
-			background: #eee !important;
-			border-color: #bbb !important;
-			color: #bbb !important;
-			cursor: default;
-			pointer-events: none;
-		}
+	button:disabled {
+		background: #eee !important;
+		border-color: #bbb !important;
+		color: #bbb !important;
+		cursor: default;
+		pointer-events: none;
 	}
 
 	button[data-action="reveal-zero-draw"] {
@@ -247,6 +242,11 @@
 		position: absolute;
 		right: 0;
 		top: 0;
+
+		&:active {
+			background: var(--primary-color);
+			color: #fff;
+		}
 	}
 
 	.big-buttons {
@@ -274,6 +274,11 @@
 			height: 40px;
 			justify-content: center;
 			padding: 0 0.65rem 0 0.75rem;
+
+			&:active {
+				background: var(--secondary-color);
+				color: #fff;
+			}
 
 			svg {
 				fill: currentColor;
