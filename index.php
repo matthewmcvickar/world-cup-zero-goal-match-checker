@@ -288,6 +288,15 @@
 			width: 40px;
 		}
 	}
+
+	button.reloading {
+		animation: spin 1 500ms;
+	}
+
+	@keyframes spin {
+		0%  { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
 	</style>
 </head>
 <body>
@@ -620,7 +629,10 @@
 
 			switch (button.dataset.action) {
 				case 'reload':
-					window.location.reload();
+					button.classList.add('reloading');
+					setTimeout(() => {
+						window.location.reload();
+					}, 550);
 					break;
 
 				case 'reveal-all-zero-draws':
