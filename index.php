@@ -226,6 +226,19 @@
 		font-weight: 500;
 		line-height: 1;
 		padding: 0.2rem 0.5rem;
+
+		&:active {
+			background: var(--primary-color);
+			color: #fff;
+		}
+
+		&:disabled {
+			background: #eee !important;
+			border-color: #bbb !important;
+			color: #bbb !important;
+			cursor: default;
+			pointer-events: none;
+		}
 	}
 
 	button[data-action="reveal-zero-draw"] {
@@ -261,7 +274,6 @@
 			height: 40px;
 			justify-content: center;
 			padding: 0 0.65rem 0 0.75rem;
-			vertical-align: auto;
 
 			svg {
 				fill: currentColor;
@@ -612,8 +624,8 @@
 					break;
 
 				case 'reveal-all-zero-draws':
-					event.target.disabled = true;
-					event.target.ariaHidden = true;
+					button.disabled = true;
+					button.ariaHidden = true;
 					document.querySelectorAll('[data-zero-draw]').forEach((element) => {
 						element.hidden = false;
 						element.ariaHidden = false;
@@ -625,17 +637,17 @@
 					break;
 
 				case 'reveal-zero-draw':
-					event.target.hidden = true;
-					event.target.ariaHidden = true;
-					event.target.previousElementSibling.hidden = false;
-					event.target.previousElementSibling.ariaHidden = false;
+					button.hidden = true;
+					button.ariaHidden = true;
+					button.previousElementSibling.hidden = false;
+					button.previousElementSibling.ariaHidden = false;
 					break;
 
 				case 'reveal-teams':
-					event.target.hidden = true;
-					event.target.ariaHidden = true;
-					event.target.previousElementSibling.hidden = false;
-					event.target.previousElementSibling.ariaHidden = false;
+					button.hidden = true;
+					button.ariaHidden = true;
+					button.previousElementSibling.hidden = false;
+					button.previousElementSibling.ariaHidden = false;
 					break;
 			}
 		});
