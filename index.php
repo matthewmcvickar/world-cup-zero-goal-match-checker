@@ -58,12 +58,12 @@
 	}
 
 	.today-and-future-matches h2 {
+		background-color: #fff;
 		position: sticky;
 		top: 0;
 		z-index: 2;
 
 		&::after {
-			background-color: #fff;
 			content: "";
 			position: absolute;
 			left: 0;
