@@ -364,6 +364,7 @@
 				$match_utc_offset = sprintf( '%+03d:00', (int) $regex_matches[2] ); // -6 => -06:00
 				$match->datetime = new DateTimeImmutable( $match->date . 'T' . $match_time . ':00' . $match_utc_offset );
 			}
+			unset( $match );
 
 			// Sort matches by date ascending.
 			usort(
@@ -569,7 +570,7 @@
 						<span class="group-and-ground">
 					';
 
-					$output .= '<span class="number">#' . $index + 1 . '</span> ';
+					$output .= '<span class="number">#' . ( $index + 1 ) . '</span> ';
 
 					if ( ! empty( $match->group ) ) {
 						$output .= '<span class="group"> &sdot; ' . $match->group . '</span> ';
