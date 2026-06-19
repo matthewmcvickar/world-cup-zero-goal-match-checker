@@ -193,6 +193,7 @@
 	.group-and-ground {
 		color: #aaa;
 		font-size: 13px;
+		line-height: 1.4;
 		min-width: 100%;
 		text-wrap: balance;
 	}
@@ -348,7 +349,7 @@
 				$loop_round                = '';
 
 				// Loop through all matches.
-				foreach( $matches as $match ) {
+				foreach( $matches as $index => $match ) {
 					$match_round = $match->round;
 
 					$current_time_in_match_timezone = new DateTime( 'now', $match->datetime->getTimezone() );
@@ -532,12 +533,14 @@
 						<span class="group-and-ground">
 					';
 
+					$output .= '<span class="number">#' . $index + 1 . '</span> ';
+
 					if ( ! empty( $match->group ) ) {
-						$output .= '<span class="group">' . $match->group . '</span> ';
+						$output .= '<span class="group"> &sdot; ' . $match->group . '</span> ';
 					}
 
 					$output .= '
-							<span class="ground">in ' . $match->ground . '</span>
+							<span class="ground"> &sdot;' . $match->ground . '</span>
 						</span>';
 
 					$output .= '
