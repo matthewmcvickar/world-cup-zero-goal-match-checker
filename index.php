@@ -146,10 +146,21 @@
 		width: 55px;
 		margin-top: 4px;
 
-		span,
 		small {
 			font-size: 10px;
 		}
+	}
+
+	/* Show the fallback time after two seconds if the JS hasn't populated the
+	local user browser time. */
+	.fallback-time {
+		animation: fade-in 1 2s;
+	}
+
+	@keyframes fade-in {
+		0%   { opacity: 0; }
+		50%  { opacity: 0; }
+		100% { opacity: 1; }
 	}
 
 	.match-details {
@@ -533,9 +544,11 @@
 					// but first output the match's start in its own timezone by default.
 					$output .= '<div class="match">
 						<time datetime="' . $match_start_in_match_timezone->format( 'c' ) . '">
-							' . $match_start_in_match_timezone->format( 'ga' ) . '
-							<br>
-							<small>' . substr( $match_start_in_match_timezone->format( 'T' ), 0, -2 ) . '</small>
+							<span class="fallback-time">
+								' . $match_start_in_match_timezone->format( 'ga' ) . '
+								<br>
+								<small>' . substr( $match_start_in_match_timezone->format( 'T' ), 0, -2 ) . '</small>
+							</span>
 						</time>
 						<div class="match-details">';
 
@@ -626,7 +639,7 @@
 			.replace(/^CDT$|^CST$/, 'CT')
 			.replace(/^EDT$|^EST$/, 'ET');
 
-		timeElement.innerHTML = `${time} <span>${zone}</span>`;
+		timeElement.innerHTML = `${time} <small>${zone}</small>`;
 	});
 
 	document.querySelectorAll('button').forEach((button) => {
