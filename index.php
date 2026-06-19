@@ -139,11 +139,14 @@
 		margin: 1rem 0;
 	}
 
-	.time {
+	time {
 		font-size: 13px;
+		line-height: 1;
 		min-width: 55px;
 		width: 55px;
+		margin-top: 4px;
 
+		span,
 		small {
 			font-size: 10px;
 		}
@@ -313,16 +316,24 @@
 				}
 			}
 
-			$data = json_decode( $matches_json );
+			$data    = json_decode( $matches_json );
 			$matches = $data->matches;
 
+			// Add a parseable datetime to each match so we can sort them properly.
+			foreach ( $matches as &$match ) {
+				preg_match( '/^(\d{2}:\d{2}) UTC([+-]\d+)$/', $match->time, $regex_matches );
+
+				$match_time       = $regex_matches[1];
+				$match_utc_offset = sprintf( '%+03d:00', (int) $regex_matches[2] ); // -6 => -06:00
+				$match->datetime = new DateTimeImmutable( $match->date . 'T' . $match_time . ':00' . $match_utc_offset );
+			}
+
 			// Sort matches by date ascending.
-			$match_dates = array_column( $matches, 'date');
-			$match_times = array_column( $matches, 'time');
-			array_multisort(
-				$match_dates, SORT_ASC,
-				$match_times, SORT_ASC,
-				$matches
+			usort(
+				$matches,
+				function( $a, $b ) {
+					return $a->datetime <=> $b->datetime;
+				}
 			);
 
 			$output = '';
@@ -340,19 +351,12 @@
 				foreach( $matches as $match ) {
 					$match_round = $match->round;
 
-					$match_time     = substr( $match->time, 0, 5 ); // Get the 00:00 from the start of the time string.
-					$match_timezone = new DateTimeZone( 'GMT' . substr( $match->time, -2 ) ); // Get the '-n' from the end of the time string.
-
-					$current_time_in_match_timezone = new DateTime( 'now', $match_timezone );
-					$match_start_in_match_timezone  = new DateTime( $match->date . ' ' . $match_time . ':00', $match_timezone );
+					$current_time_in_match_timezone = new DateTime( 'now', $match->datetime->getTimezone() );
+					$match_start_in_match_timezone  = $match->datetime;
 					$match_end_in_match_timezone    = ( clone $match_start_in_match_timezone )->modify( '+ 2 hours' );
+					$match_day_end_with_padding     = ( clone $match_start_in_match_timezone )->modify( '+ 14 hours' );
 
-					$here_timezone     = new DateTimeZone( 'America/Los_Angeles' );
-					$current_time_here = new DateTime( 'now', $here_timezone );
-					$match_start_here  = ( clone $match_start_in_match_timezone )->setTimezone( $here_timezone );
-					$match_end_here    = ( clone $match_start_here )->modify( '+ 2 hours' );
-
-					$match_is_today = $current_time_in_match_timezone->format( 'Y-m-d' ) === $match_start_in_match_timezone->format( 'Y-m-d' );
+					// $match_is_today = $current_time_in_match_timezone->format( 'Y-m-d' ) === $match_start_in_match_timezone->format( 'Y-m-d' );
 
 					// Get the status of the match:
 					// 1. If the final score is in, the match is over.
@@ -384,7 +388,7 @@
 
 					// If this match happens today or in the future, then close the 'Past
 					// Matches' section.
-					if ( $past_matches_section_open && $current_time_in_match_timezone->format( 'Y-m-d' ) <= $match_start_in_match_timezone->format( 'Y-m-d' ) ) {
+					if ( $past_matches_section_open && $current_time_in_match_timezone <= $match_day_end_with_padding ) {
 						$past_matches_section_open = false;
 						$output .= '</details>
 						<div class="today-and-future-matches">';
@@ -487,8 +491,14 @@
 						$hidden_attr = '';
 					}
 
+					// JavaScript will replace this time value with the user's local time,
+					// but first output the match's start in its own timezone by default.
 					$output .= '<div class="match">
-						<div class="time">' . $match_start_here->format( 'ga' ) . ' <small>PT</small></div>
+						<time datetime="' . $match_start_in_match_timezone->format( 'c' ) . '">
+							' . $match_start_in_match_timezone->format( 'ga' ) . '
+							<br>
+							<small>' . substr( $match_start_in_match_timezone->format( 'T' ), 0, -2 ) . '</small>
+						</time>
 						<div class="match-details">';
 
 					$output .= '<span class="teams" data-teams ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
@@ -551,6 +561,34 @@
 		</button>
 	</div>
 	<script>
+	document.querySelectorAll('time').forEach((timeElement) => {
+		const matchTime = new Date(timeElement.dateTime);
+
+		// Turn time into parts.
+		const parts = new Intl.DateTimeFormat(undefined, {
+			hour: 'numeric',
+			hour12: true,
+			timeZoneName: 'short',
+		}).formatToParts(matchTime);
+
+		// Format time: 8pm
+		const hour = parts.find(p => p.type === 'hour').value;
+		const ampm = parts.find(p => p.type === 'dayPeriod').value;
+		const time = (hour + ampm).toLowerCase();
+
+		// Get timezone.
+		let zone = parts.find(p => p.type === 'timeZoneName').value ?? '';
+
+		// Use shortened version of timezone if possible.
+		zone = zone
+			.replace(/^PDT$|^PST$/, 'PT')
+			.replace(/^MDT$|^MST$/, 'MT')
+			.replace(/^CDT$|^CST$/, 'CT')
+			.replace(/^EDT$|^EST$/, 'ET');
+
+		timeElement.innerHTML = `${time} <span>${zone}</span>`;
+	});
+
 	document.querySelectorAll('button').forEach((button) => {
 		button.addEventListener('click', (event) => {
 			event.preventDefault();
