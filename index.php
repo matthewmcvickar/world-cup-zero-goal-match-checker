@@ -313,14 +313,14 @@
 	}
 
 	.big-buttons {
-		bottom: 30px;
+		bottom: 25px;
 		display: flex;
 		gap: 1rem;
 		justify-content: flex-end;
 		margin: 3rem 0 0 0;
-		padding: 0 30px;
+		padding: 0 25px;
 		position: sticky;
-		width: calc(100% - 60px);
+		width: 100%;
 
 		button {
 			align-content: center;
