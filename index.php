@@ -24,7 +24,7 @@
 
 	body {
 		font-family: var(--default-font);
-		margin: 0.5rem auto 1rem auto;
+		margin: 0.5rem auto 0 auto;
 		max-width: min(100vw, 600px);
 	}
 
@@ -340,14 +340,19 @@
 	}
 
 	.big-buttons {
-		bottom: 24px;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		background-color: rgba(255, 255, 255, 0.3);
+		border-top: 1px solid #ccc;
+		bottom: 0;
 		display: flex;
 		gap: 0.5rem;
-		justify-content: flex-end;
-		margin: 3rem 0 0 0;
-		padding: 0 24px;
+		justify-content: space-between;
+		margin: 0;
+		padding: 24px;
 		position: sticky;
 		width: 100%;
+		z-index: 99;
 
 		button {
 			align-content: center;
