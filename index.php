@@ -13,6 +13,9 @@
 		--primary-color-bg: #bfdfff;
 		--secondary-color:  #666;
 
+		--red-border: #ff4500; /* orangered */
+		--red-bg: #ffe9e3;
+
 		--default-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 		--heading-font: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 	}
@@ -226,6 +229,17 @@
 		font-weight: 600;
 	}
 
+	.match-details.reveal-score .team--winner {
+		background-color: #00640020;
+		border-radius: 4px;
+		color: darkgreen;
+		font-weight: 600;
+		margin-top: 3px;
+		line-height: 1;
+		padding: 0.15rem 0.25rem;
+		transform: translateY(2px);
+	}
+
 	.zero-draw,
 	.status {
 		font-weight: 700;
@@ -237,7 +251,7 @@
 	}
 
 	.status--playing {
-		color: orangered;
+		color: var(--red-border);
 	}
 
 	.status--complete {
@@ -246,7 +260,7 @@
 
 	.zero-draw {
 		border-radius: 4px;
-		margin-top: -0.15rem;
+		margin-top: -3px;
 		line-height: 1;
 		padding: 0.15rem 0.25rem;
 		transform: translateY(2px);
@@ -289,6 +303,7 @@
 		font-weight: 500;
 		line-height: 1;
 		padding: 0.2rem 0.5rem;
+		user-select: none;
 	}
 
 	button:disabled {
@@ -299,26 +314,42 @@
 		pointer-events: none;
 	}
 
-	button[data-action="reveal-zero-draw"] {
-		background-color: var(--primary-color-bg);
-		border-color: var(--primary-color);
+	button[data-action="reveal-zero-draw"],
+	button[data-action="reveal-score"] {
 		position: absolute;
 		right: 0;
 		top: 0;
 
 		&:active {
-			background: var(--primary-color);
 			color: #fff;
 		}
 	}
 
+	button[data-action="reveal-zero-draw"] {
+		background-color: var(--primary-color-bg);
+		border-color: var(--primary-color);
+
+		&:active {
+			background-color: var(--primary-color);
+		}
+	}
+
+	button[data-action="reveal-score"] {
+		background-color: #ffc9b4;
+		border-color: var(--red-border);
+
+		&:active {
+			background-color: var(--red-border);
+		}
+	}
+
 	.big-buttons {
-		bottom: 25px;
+		bottom: 12px;
 		display: flex;
-		gap: 1rem;
+		gap: 0.5rem;
 		justify-content: flex-end;
 		margin: 3rem 0 0 0;
-		padding: 0 25px;
+		padding: 0 12px;
 		position: sticky;
 		width: 100%;
 
@@ -331,13 +362,12 @@
 			color: var(--secondary-color);
 			display: flex;
 			flex-direction: row;
-			font-size: 0.85rem;
+			font-size: 0.8rem;
 			font-weight: 600;
 			line-height: 1.1;
 			gap: 0.33rem;
 			height: 40px;
 			justify-content: center;
-			padding: 0 0.9rem 0 0.75rem;
 
 			&:active {
 				background: var(--secondary-color);
@@ -356,6 +386,23 @@
 			padding: 0;
 			width: 40px;
 		}
+
+		button[data-action="reveal-all-zero-draws"] {
+			padding: 0 0.9rem 0 0.75rem;
+		}
+
+		button[data-action="enable-score-reveal"] {
+			margin-right: auto;
+			padding-right: .75rem;
+
+			svg {
+				transform: translateY(1px);
+			}
+		}
+
+		button[data-action="reveal-all-scores"] {
+			margin-right: auto;
+		}
 	}
 
 	button.reloading {
@@ -365,6 +412,21 @@
 	@keyframes spin {
 		0%  { transform: rotate(0deg); }
 		100% { transform: rotate(360deg); }
+	}
+
+	button[hidden] {
+		display: none;
+	}
+
+	.score {
+		background-color: #00640020;
+		border-radius: 4px;
+		color: darkgreen;
+		font-weight: 600;
+		margin-top: -3px;
+		line-height: 1;
+		padding: 0.15rem 0.25rem;
+		transform: translateY(2px);
 	}
 	</style>
 </head>
@@ -659,15 +721,15 @@
 						</time>
 					';
 
-					$team_1_attr = ( 1 === $winning_team ) ? 'data-team-winner' : '';
-					$team_2_attr = ( 2 === $winning_team ) ? 'data-team-winner' : '';
+					$team_1_class = ( 1 === $winning_team ) ? 'team--winner' : '';
+					$team_2_class = ( 2 === $winning_team ) ? 'team--winner' : '';
 
 					$output .= '
 						<div class="match-details">
 							<span class="teams" ' . $hidden_attr . '>
-								<span class="team-1" ' . $team_1_attr . '>' . $team_1_name . '</span>
+								<span class="team-1 ' . $team_1_class . '">' . $team_1_name . '</span>
 								v.
-								<span class="team-2" ' . $team_2_attr . '>' . $team_2_name . '</span>
+								<span class="team-2 ' . $team_2_class . '">' . $team_2_name . '</span>
 							</span>';
 
 							if ( ! $show_teams ) {
@@ -689,6 +751,11 @@
 									}
 									$output .= '<button data-action="reveal-zero-draw">Reveal if 0-0</button>';
 								}
+
+								$output .= '
+									<span class="score" hidden aria-hidden="true">' . $score_string . '</span>
+									<button data-action="reveal-score" hidden aria-hidden="true">Reveal Score</button>
+								';
 							}
 
 							$output .= '
@@ -717,6 +784,14 @@
 		</div>
 	</main>
 	<div class="big-buttons">
+		<button data-action="enable-score-reveal">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Pro v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2026 Fonticons, Inc.--><path d="M320.1 32C329.1 32 337.4 37.1 341.5 45.1L415.1 189.3L575 214.7C583.9 216.1 591.3 222.4 594.1 231C596.9 239.6 594.6 249 588.3 255.4L473.7 369.9L499 529.8C500.4 538.7 496.7 547.7 489.4 553C482.1 558.3 472.4 559.1 464.4 555L320.1 481.6L175.8 555C167.8 559.1 158.1 558.3 150.8 553C143.5 547.7 139.8 538.8 141.2 529.8L166.4 369.9L52 255.4C45.6 249 43.4 239.6 46.2 231C49 222.4 56.4 216.1 65.3 214.7L225.1 189.3L298.7 45.1L300.4 42.2C304.9 35.9 312.2 32 320.1 32zM320.1 368C302.4 368 288.1 382.3 288.1 400C288.1 417.7 302.4 432 320.1 432C337.8 432 352.1 417.7 352.1 400C352.1 382.3 337.8 368 320.1 368zM320.1 192C301.8 192 287.3 207.7 288.8 226L296.1 314C297.1 326.4 307.5 336 320 336C332.5 336 342.9 326.4 343.9 314L351.2 226C352.7 207.7 338.3 192 319.9 192z"/></svg>
+			<span>Enable<br>Score Reveal</span>
+		</button>
+		<button data-action="reveal-all-scores" aria-hidden="true" hidden>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 224C301.8 224 287.3 239.5 288.6 257.7L296 361.7C296.9 374.2 307.4 384 319.9 384C332.5 384 342.9 374.3 343.8 361.7L351.2 257.7C352.5 239.5 338.1 224 319.8 224z"/></svg>
+			<span>Reveal<br>All Scores</span>
+		</button>
 		<button data-action="reveal-all-zero-draws">
 			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Pro v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2026 Fonticons, Inc.--><path d="M376 88C376 57.1 350.9 32 320 32C289.1 32 264 57.1 264 88C264 118.9 289.1 144 320 144C350.9 144 376 118.9 376 88zM179.7 245C180.9 242 183.9 240 187.1 240L223 240L200.3 330.6C192 363.8 211.3 397.6 244 407.4L340 436.2L290.8 547C283.6 563.1 290.9 582.1 307 589.2C323.1 596.3 342.1 589.1 349.2 573L405.8 445.6C417.5 419.2 403.4 388.4 375.7 380.1L300.3 357.5L321 287.1L331 304.2C342.5 323.9 363.5 336 386.3 336L447.9 336C465.6 336 479.9 321.7 479.9 304C479.9 286.3 465.6 272 447.9 272L386.3 272L353.5 215.7C339.2 191.1 312.9 176 284.4 176L187.1 176C157.7 176 131.2 193.9 120.2 221.3L98.3 276.1C91.7 292.5 99.7 311.1 116.1 317.7C132.5 324.3 151.1 316.3 157.7 299.9L179.7 245zM167.8 452.6C165.9 458 162.5 462.9 158 466.5L75.6 534.5C62 545.7 60 565.9 71.3 579.5C82.6 593.1 102.7 595.1 116.3 583.8L198.7 515.9C212.1 504.9 222.2 490.4 228 474.1L234.9 454.8L230.2 453.4C209.8 447.3 192.3 435.8 179 421L167.7 452.7zM512 608C547.3 608 576 579.3 576 544C576 508.7 547.3 480 512 480C476.7 480 448 508.7 448 544C448 579.3 476.7 608 512 608z"/></svg>
 			<span>Reveal All<br>0-0 or No</span>
@@ -783,6 +858,10 @@
 	});
 
 	// Handle button clicks.
+	revealAllZeroDrawsButton = document.querySelector('button[data-action="reveal-all-zero-draws"]');
+	enableScoreRevealButton = document.querySelector('button[data-action="enable-score-reveal"]');
+	revealAllScoresButton = document.querySelector('button[data-action="reveal-all-scores"]');
+
 	document.querySelectorAll('button').forEach((button) => {
 		button.addEventListener('click', (event) => {
 			event.preventDefault();
@@ -793,6 +872,23 @@
 					setTimeout(() => {
 						window.location.reload();
 					}, 550);
+					break;
+
+				case 'reveal-zero-draw':
+					button.hidden = true;
+					button.ariaHidden = true;
+					button.previousElementSibling.hidden = false;
+					button.previousElementSibling.ariaHidden = false;
+					break;
+
+				case 'reveal-score':
+					button.hidden = true;
+					button.ariaHidden = true;
+					button.closest('.match-details').classList.add('reveal-score');
+					button.previousElementSibling.hidden = false;
+					button.previousElementSibling.ariaHidden = false;
+					button.closest('.match-details').querySelector('.zero-draw').hidden = true;
+					button.closest('.match-details').querySelector('.zero-draw').ariaHidden = true;
 					break;
 
 				case 'reveal-all-zero-draws':
@@ -808,18 +904,52 @@
 					});
 					break;
 
-				case 'reveal-zero-draw':
+				case 'reveal-teams':
 					button.hidden = true;
 					button.ariaHidden = true;
 					button.previousElementSibling.hidden = false;
 					button.previousElementSibling.ariaHidden = false;
 					break;
 
-				case 'reveal-teams':
+				case 'enable-score-reveal':
 					button.hidden = true;
 					button.ariaHidden = true;
-					button.previousElementSibling.hidden = false;
-					button.previousElementSibling.ariaHidden = false;
+					revealAllScoresButton.hidden = false;
+					revealAllScoresButton.ariaHidden = false;
+					revealAllZeroDrawsButton.disabled = true;
+					revealAllZeroDrawsButton.ariaHidden = true;
+					document.querySelectorAll('button[data-action="reveal-zero-draw"]').forEach((element) => {
+						element.hidden = true;
+						element.ariaHidden = true;
+					});
+					document.querySelectorAll('button[data-action="reveal-score"]').forEach((element) => {
+						element.hidden = false;
+						element.ariaHidden = false;
+					});
+					break;
+
+				case 'reveal-all-scores':
+					button.disabled = true;
+					button.ariaHidden = true;
+					document.querySelectorAll('.match-details').forEach((element) => {
+						element.classList.add('reveal-score');
+					});
+					document.querySelectorAll('.score').forEach((element) => {
+						element.hidden = false;
+						element.ariaHidden = false;
+					});
+					document.querySelectorAll('button[data-action="reveal-score"]').forEach((element) => {
+						element.hidden = true;
+						element.ariaHidden = true;
+					});
+					document.querySelectorAll('button[data-action="reveal-zero-draw"]').forEach((element) => {
+						element.hidden = true;
+						element.ariaHidden = true;
+					});
+					document.querySelectorAll('.zero-draw').forEach((element) => {
+						element.hidden = true;
+						element.ariaHidden = true;
+					});
 					break;
 			}
 		});
