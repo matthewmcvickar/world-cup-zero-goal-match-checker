@@ -480,6 +480,26 @@
 						$match_status = 'future';
 					}
 
+					$winning_team = 0;
+					$nil_nil_draw = false;
+					$score_string = '';
+
+					// Calculate 0-0 and score.
+					if ( isset( $match->score->ft[0] ) && isset( $match->score->ft[1] ) ) {
+						$team_1_score = $match->score->ft[0];
+						$team_2_score = $match->score->ft[1];
+
+						$nil_nil_draw = ( 0 === $team_1_score && 0 === $team_2_score ) ?? false;
+						$score_string = $team_1_score . '-' . $team_2_score;
+
+						if ( $team_1_score > $team_2_score ) {
+							$winning_team = 1;
+						}
+						elseif ( $team_2_score > $team_1_score ) {
+							$winning_team = 2;
+						}
+					}
+
 					// Rename all 'Matchday [n]' rounds into 'Group Stage.'
 					if ( preg_match( '~Matchday~', $match->round ) ) {
 						$match_round = 'Group Stage';
@@ -616,10 +636,13 @@
 						$hidden_attr = '';
 					}
 
+					$output .= '
+					<div class="match">
+					';
+
 					// JavaScript will replace this time value with the user's local time,
 					// but first output the match's start in its own timezone by default.
 					$output .= '
-					<div class="match">
 						<time datetime="' . $match_start_in_match_timezone->format( 'c' ) . '">
 							<span class="fallback-time">
 								' . $match_start_in_match_timezone->format( 'ga' ) . '
@@ -627,48 +650,53 @@
 								<small>' . substr( $match_start_in_match_timezone->format( 'T' ), 0, -2 ) . '</small>
 							</span>
 						</time>
+					';
+
+					$team_1_attr = ( 1 === $winning_team ) ? 'data-team-winner' : '';
+					$team_2_attr = ( 2 === $winning_team ) ? 'data-team-winner' : '';
+
+					$output .= '
 						<div class="match-details">
-					';
+							<span class="teams" ' . $hidden_attr . '>
+								<span class="team-1" ' . $team_1_attr . '>' . $team_1_name . '</span>
+								v.
+								<span class="team-2" ' . $team_2_attr . '>' . $team_2_name . '</span>
+							</span>';
 
-					$output .= '<span class="teams" data-teams ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
-
-					if ( ! $show_teams ) {
-						$output .= '<button data-action="reveal-teams">Reveal Teams</button>';
-					}
-
-					if ( 'playing' === $match_status ) {
-						$output .= '<span class="status status--playing">📢 PLAYING!</span>';
-					}
-					else if ( 'completed' === $match_status ) {
-						// $output .= '<span class="status status--complete">DONE!</span>';
-
-						if ( $match_round === 'Group Stage' ) {
-							if ( isset( $match->score->ft )
-								&& 0 === $match->score->ft[0] && 0 === $match->score->ft[1] ) {
-								$output .= '<span class="zero-draw zero-draw--true" data-zero-draw="true" aria-hidden="true" hidden>0-0!</span>';
+							if ( ! $show_teams ) {
+								$output .= '<button data-action="reveal-teams">Reveal Teams</button>';
 							}
-							else {
-								$output .= '<span class="zero-draw zero-draw--false" data-zero-draw="false" aria-hidden="true" hidden>NOT 0-0!</span>';
+
+							if ( 'playing' === $match_status ) {
+								$output .= '<span class="status status--playing">⚽️ PLAYING!</span>';
 							}
-							$output .= '<button data-action="reveal-zero-draw">Reveal if Nil-nil</button>';
-						}
-					}
+							else if ( 'completed' === $match_status ) {
+								// $output .= '<span class="status status--complete">DONE!</span>';
 
-					$output .= '
-						<span class="group-and-ground">
-					';
+								if ( $match_round === 'Group Stage' ) {
+									if ( $nil_nil_draw ) {
+										$output .= '<span class="zero-draw zero-draw--true" data-zero-draw="true" aria-hidden="true" hidden>0-0!</span>';
+									}
+									else {
+										$output .= '<span class="zero-draw zero-draw--false" data-zero-draw="false" aria-hidden="true" hidden>NOT 0-0!</span>';
+									}
+									$output .= '<button data-action="reveal-zero-draw">Reveal if 0-0</button>';
+								}
+							}
 
-					$output .= '<span class="number">#' . ( $index + 1 ) . '</span> ';
+							$output .= '
+							<span class="group-and-ground">
+								<span class="number">#' . ( $index + 1 ) . '</span> ';
 
-					if ( ! empty( $match->group ) ) {
-						$output .= '<span class="group"> &sdot; ' . $match->group . '</span> ';
-					}
+							if ( ! empty( $match->group ) ) {
+								$output .= '<span class="group"> &sdot; ' . $match->group . '</span> ';
+							}
 
-					$output .= '
-							<span class="ground"> &sdot;' . $match->ground . '</span>
-						</span>';
+							$output .= '
+								<span class="ground"> &sdot;' . $match->ground . '</span>
+							</span>';
 
-					$output .= '
+							$output .= '
 						</div>
 					</div>';
 				}
