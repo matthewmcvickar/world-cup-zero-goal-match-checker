@@ -116,7 +116,7 @@
 		margin-bottom: 0.75rem;
 		margin-left: -1rem;
 		margin-right: -1rem;
-		padding: 0 1rem 0.5rem 1rem;
+		padding: 0 1rem;
 	}
 
 	details summary {
@@ -126,6 +126,7 @@
 		font-weight: 600;
 		text-transform: uppercase;
 		padding-top: 0.5rem;
+		padding-bottom: .5rem;
 		position: sticky;
 		top: 0;
 		z-index: 2;
@@ -144,6 +145,20 @@
 	details h2 {
 		background-color: #fafafa;
 		font-size: 18px;
+		margin-top: 0;
+		position: sticky;
+		top: 28px;
+		z-index: 2;
+	}
+
+	details h2::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 100%;
+		width: 100%;
+		height: 18px;
+		background-image: linear-gradient(to bottom, #fafafa, #fafafa00);
 	}
 
 	details h3 {
