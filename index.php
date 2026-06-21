@@ -19,14 +19,19 @@
 
 	body {
 		font-family: var(--default-font);
-		margin: 1rem auto;
+		margin: 0.5rem auto 1rem auto;
 		max-width: 600px;
 	}
 
 	h1 {
 		line-height: 1;
+		margin-bottom: 0.75rem;
 		margin-top: 0.25rem;
 		text-align: center;
+
+		span {
+			display: block;
+		}
 	}
 
 	.title {
@@ -42,6 +47,7 @@
 		color: var(--secondary-color);
 		font-size: 1rem;
 		letter-spacing: -0.025rem;
+		margin-top: 0.25rem;
 	}
 
 	h2 {
@@ -52,8 +58,8 @@
 		margin-bottom: -.25rem;
 		margin-left: -0.5rem;
 		margin-right: -0.5rem;
-		margin-top: 1.25rem;
-		padding: 0 0.5rem;
+		margin-top: 1rem;
+		padding: 0.25rem 0.5rem 0;
 		text-transform: uppercase;
 	}
 
@@ -98,17 +104,32 @@
 		background: #fafafa;
 		border-bottom: 1px solid #eee;
 		border-top: 1px solid #eee;
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 		margin-left: -1rem;
 		margin-right: -1rem;
-		padding: 0.5rem 1rem;
+		padding: 0 1rem 0.5rem 1rem;
 	}
 
 	details summary {
+		background: #fafafa;
 		color: #757575;
 		font-size: 14px;
 		font-weight: 600;
 		text-transform: uppercase;
+		padding-top: 0.5rem;
+		position: sticky;
+		top: 0;
+		z-index: 2;
+	}
+
+	details:open summary::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 100%;
+		width: 100%;
+		height: 18px;
+		background-image: linear-gradient(to bottom, #fafafa, #fafafa00);
 	}
 
 	details h2 {
