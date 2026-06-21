@@ -402,7 +402,11 @@
 		}
 
 		button[data-action="reveal-all-scores"] {
+			background-color: var(--red-bg);
+			border-color: var(--red-border);
+			color: var(--red-border);
 			margin-right: auto;
+			padding-right: .75rem;
 		}
 	}
 
