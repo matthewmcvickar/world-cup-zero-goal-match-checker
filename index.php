@@ -340,12 +340,12 @@
 	}
 
 	.big-buttons {
-		bottom: 12px;
+		bottom: 24px;
 		display: flex;
 		gap: 0.5rem;
 		justify-content: flex-end;
 		margin: 3rem 0 0 0;
-		padding: 0 12px;
+		padding: 0 24px;
 		position: sticky;
 		width: 100%;
 
