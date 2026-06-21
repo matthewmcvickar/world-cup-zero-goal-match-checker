@@ -355,7 +355,7 @@
 			<summary>About</summary>
 			<h2>What?</h2>
 			<p>This is a complete World Cup 2026 match schedule that tells you whether
-			a game ended in a 0-0 draw. That&rsquo;s it!</p>
+			a match ended in a 0-0 draw. That&rsquo;s it!</p>
 			<h2>Why?</h2>
 			<p>I made this because my partner loves to watch World Cup matches but
 			wants to skip the matches where nobody scores, because those (usually)
