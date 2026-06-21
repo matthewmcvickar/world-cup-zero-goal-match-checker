@@ -363,8 +363,8 @@
 </head>
 <body>
 	<h1>
-		<span class="title">Nil-nil Or No</span><br>
-		<span class="subtitle">The World Cup 2026 Zero-goal Match Checker</span>
+		<span class="title">Nil-nil Or No</span>
+		<span class="subtitle">World Cup 2026 Zero-goal Match Checker</span>
 	</h1>
 	<main>
 		<details class="about">
