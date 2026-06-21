@@ -63,7 +63,16 @@
 		text-transform: uppercase;
 	}
 
-	.today-and-future-matches h2 {
+	.future-matches {
+		opacity: 0;
+		transition: opacity .25s ease-in;
+	}
+
+	.future-matches.loaded {
+		opacity: 1;
+	}
+
+	.future-matches h2 {
 		background-color: #fff;
 		position: sticky;
 		top: 0;
@@ -411,11 +420,18 @@
 			if ( empty( $matches ) ) {
 				echo '<p>Something&rsquo;s wrong&mdash;could not get matches data! 😩</p>';
 			} else {
-				$output .= '<details><summary>Past Matches</summary>';
+				$output .= '
+				<details>
+					<summary>Past Matches</summary>
+					<div class="past-matches">
+						<!-- Past matches will be moved in here by JS; only browser knows user time. -->
+					</div>
+				</details>
+				<div class="future-matches">
+				';
 
-				$past_matches_section_open = true;
-				$in_future_and_new_round   = false;
-				$loop_round                = '';
+				$loop_round              = '';
+				$in_future_and_new_round = false;
 
 				// Loop through all matches.
 				foreach( $matches as $index => $match ) {
@@ -424,9 +440,6 @@
 					$current_time_in_match_timezone = new DateTime( 'now', $match->datetime->getTimezone() );
 					$match_start_in_match_timezone  = $match->datetime;
 					$match_end_in_match_timezone    = ( clone $match_start_in_match_timezone )->modify( '+ 2 hours' );
-					$match_day_end_with_padding     = ( clone $match_start_in_match_timezone )->modify( '+ 14 hours' );
-
-					// $match_is_today = $current_time_in_match_timezone->format( 'Y-m-d' ) === $match_start_in_match_timezone->format( 'Y-m-d' );
 
 					// Get the status of the match:
 					// 1. If the final score is in, the match is over.
@@ -456,20 +469,6 @@
 						$match_round = 'Group Stage';
 					}
 
-					// If this match happens today or in the future, then close the 'Past
-					// Matches' section.
-					if ( $past_matches_section_open && $current_time_in_match_timezone <= $match_day_end_with_padding ) {
-						$past_matches_section_open = false;
-						$output .= '</details>
-						<div class="today-and-future-matches">';
-
-						if ( $loop_round === $match_round ) {
-							$output .= '
-							<div class="round">
-								<h2>' . $match_round . '</h2>';
-						}
-					}
-
 					// If we're in the future and it's a new round, start hiding teams.
 					if ( ! $in_future_and_new_round
 						&& ( 'future' === $match_status && $loop_round !== $match_round ) ) {
@@ -477,23 +476,63 @@
 							$in_future_and_new_round = true;
 					}
 
+					// Close open day if this match is on a new day.
+					if ( isset( $day ) && $match_start_in_match_timezone->format( 'd' ) !== $day ) {
+						$output .= '</div>';
+					}
+
 					// Figure out if we need to show a new round heading.
 					if ( empty( $loop_round ) || $loop_round !== $match_round ) {
-						if ( ! empty( $loop_round ) ) {
-							$output .= '</div>';
-						}
-
 						$loop_round = $match_round;
 
-						$output .= '<div class="round">';
-						$output .= '<h2>' . $loop_round . '</h2>';
+						// Figure out the last day for showing this round heading; this is
+						// necessary for the moving/copying that happens in JS after all
+						// matches load.
+						switch ( $loop_round ) {
+							case 'Group Stage':
+								$round_start_day = '2026-06-11';
+								$round_end_day   = '2026-06-27';
+								break;
+							case 'Round of 32':
+								$round_start_day = '2026-06-28';
+								$round_end_day   = '2026-07-03';
+								break;
+							case 'Round of 16':
+								$round_start_day = '2026-07-04';
+								$round_end_day   = '2026-07-07';
+								break;
+							case 'Quarter-final':
+								$round_start_day = '2026-07-09';
+								$round_end_day   = '2026-07-11';
+								break;
+							case 'Semi-final':
+								$round_start_day = '2026-07-14';
+								$round_end_day   = '2026-07-15';
+								break;
+							case 'Match for third place':
+								$round_start_day = '2026-07-18';
+								$round_end_day   = '2026-07-18';
+								break;
+							case 'Final':
+								$round_start_day = '2026-07-19';
+								$round_end_day   = '2026-07-19';
+								break;
+							default:
+							  $round_start_day = '';
+							  $round_end_day   = '';
+						}
+
+						$output .= '<h2
+							data-round-start="' . $round_start_day  . 'T00:00:00"
+							data-round-end="' . $round_end_day  . 'T00:00:00">' . $loop_round . '</h2>';
 					}
 
 					// Figure out if we need to show a new day heading.
 					if ( ! isset( $day )
 						|| ( isset( $day ) && $match_start_in_match_timezone->format( 'd' ) !== $day ) ) {
 						$day = $match_start_in_match_timezone->format( 'd' );
-						$output .= '<h3>' . $match_start_in_match_timezone->format( 'l, F d, Y' ) . '</h3>';
+						$output .= '<div data-day="' . $match_start_in_match_timezone->format( 'Y-m-d' ) . 'T00:00:00">
+							<h3>' . $match_start_in_match_timezone->format( 'l, F d, Y' ) . '</h3>';
 					}
 
 					// Show match info.
@@ -563,7 +602,8 @@
 
 					// JavaScript will replace this time value with the user's local time,
 					// but first output the match's start in its own timezone by default.
-					$output .= '<div class="match">
+					$output .= '
+					<div class="match">
 						<time datetime="' . $match_start_in_match_timezone->format( 'c' ) . '">
 							<span class="fallback-time">
 								' . $match_start_in_match_timezone->format( 'ga' ) . '
@@ -571,7 +611,8 @@
 								<small>' . substr( $match_start_in_match_timezone->format( 'T' ), 0, -2 ) . '</small>
 							</span>
 						</time>
-						<div class="match-details">';
+						<div class="match-details">
+					';
 
 					$output .= '<span class="teams" data-teams ' . $hidden_attr . '>' . $team_1_name . ' v. ' . $team_2_name . '</span>';
 
@@ -582,9 +623,6 @@
 					if ( 'playing' === $match_status ) {
 						$output .= '<span class="status status--playing">📢 PLAYING!</span>';
 					}
-					// else if ( 'future' === $match_status && $match_is_today ) {
-					// 	$output .= '<span class="status status--upcoming">⏰ SOON!</span>';
-					// }
 					else if ( 'completed' === $match_status ) {
 						// $output .= '<span class="status status--complete">DONE!</span>';
 
@@ -619,6 +657,8 @@
 					</div>';
 				}
 
+				$output .= '</div>';
+
 				echo $output;
 			}
 			?>
@@ -635,6 +675,34 @@
 		</button>
 	</div>
 	<script>
+	// Move yesterday's matches into 'Past Matches.'
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+
+	const pastMatchesContainer = document.querySelector('.past-matches');
+	const futureMatchesContainer = document.querySelector('.future-matches');
+	document.querySelectorAll('.future-matches > *').forEach((item) => {
+		// Copy headings into 'Past Matches' if they should show before today.
+		if (item.dataset.roundStart) {
+			if (new Date(item.dataset.roundStart) < today) {
+				pastMatchesContainer.appendChild(item.cloneNode(true));
+			}
+			if (new Date(item.dataset.roundEnd) < today) {
+				item.remove();
+			}
+		}
+		// Copy matches with a day before today into the 'Past Matches' box.
+		else if (item.dataset.day) {
+			if (new Date(item.dataset.day) < today) {
+				pastMatchesContainer.appendChild(item.cloneNode(true));
+				item.remove();
+			}
+		}
+	});
+
+	futureMatchesContainer.classList.add('loaded');
+
+	// Fill in local (browser) time for all match start times.
 	document.querySelectorAll('time').forEach((timeElement) => {
 		const matchTime = new Date(timeElement.dateTime);
 
@@ -663,6 +731,7 @@
 		timeElement.innerHTML = `${time} <small>${zone}</small>`;
 	});
 
+	// Handle button clicks.
 	document.querySelectorAll('button').forEach((button) => {
 		button.addEventListener('click', (event) => {
 			event.preventDefault();
